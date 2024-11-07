@@ -1,6 +1,7 @@
 package enumeration;
 
 public enum Category {
+
     ELECTRONICS("Electronics"),
     FOOD("Food"),
     CLOTHING("Clothing"),

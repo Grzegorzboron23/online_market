@@ -1,6 +1,7 @@
 package enumeration;
 
 public enum Position {
+
     CEO("CEO"),
     MANAGER("Manager"),
     CASHIER("Cashier");
