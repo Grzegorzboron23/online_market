@@ -9,9 +9,8 @@ public class Employee {
     private EmployeeInfo employeesInfo;
     private AddressInfo addressInfo;
 
-    public Employee(EmployeeInfo employeesInfo, AddressInfo addressInfo) {
+    public Employee(EmployeeInfo employeesInfo) {
         this.employeesInfo = employeesInfo;
-        this.addressInfo = addressInfo;
     }
 
     public EmployeeInfo getEmployeesInfo() {

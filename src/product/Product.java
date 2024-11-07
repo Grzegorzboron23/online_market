@@ -8,24 +8,20 @@ import info.ProductDetailsInfo;
 
 public abstract class Product {
 
-    private ProductBasicInfo basicInfo;
+    //    In this program product cannot change basicInfo
+    private final ProductBasicInfo basicInfo;
     private PricingInfo pricingInfo;
     private Size size;
     private ProductDetailsInfo productDetails;
 
-    public Product(ProductBasicInfo basicInfo, PricingInfo pricingInfo, Size size, ProductDetailsInfo productDetails) {
+    public Product(ProductBasicInfo basicInfo, PricingInfo pricingInfo, Size size) {
         this.basicInfo = basicInfo;
         this.pricingInfo = pricingInfo;
         this.size = size;
-        this.productDetails = productDetails;
     }
 
     public ProductBasicInfo getBasicInfo() {
         return basicInfo;
-    }
-
-    public void setBasicInfo(ProductBasicInfo basicInfo) {
-        this.basicInfo = basicInfo;
     }
 
     public PricingInfo getPricingInfo() {

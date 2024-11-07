@@ -5,20 +5,23 @@ import attribute.Size;
 import enumeration.Category;
 import info.PricingInfo;
 import info.ProductBasicInfo;
-import info.ProductDetailsInfo;
 
 public class Laptop extends Product {
 
-    private final String brand;
-    private final String processor;
-    private final String operatingSystem;
     private static final Category category = Category.ELECTRONICS;
+    //    Cannot change brand no setter final
+    private final String brand;
+    private String processor;
+    private String operatingSystem;
+    private boolean isInsured;
 
-    private Laptop(Builder builder) {
-        super(builder.basicInfo, builder.pricingInfo, builder.size, builder.productDetailsInfo);
-        this.brand = builder.brand;
-        this.processor = builder.processor;
-        this.operatingSystem = builder.operatingSystem;
+    public Laptop(ProductBasicInfo basicInfo, PricingInfo pricingInfo,
+                  Size size, String brand, String processor, String operatingSystem) {
+        super(basicInfo, pricingInfo, size);
+        this.brand = brand;
+        this.processor = processor;
+        this.operatingSystem = operatingSystem;
+        this.isInsured = false;
     }
 
     public String getBrand() {
@@ -29,45 +32,26 @@ public class Laptop extends Product {
         return processor;
     }
 
+    public void setProcessor(String processor) {
+        this.processor = processor;
+    }
+
     public String getOperatingSystem() {
         return operatingSystem;
     }
 
-    public static class Builder {
-        private final ProductBasicInfo basicInfo;
-        private final PricingInfo pricingInfo;
-        private final Size size;
-        private final ProductDetailsInfo productDetailsInfo;
-        private String brand;
-        private String processor;
-        private String operatingSystem;
+    public void setOperatingSystem(String operatingSystem) {
+        this.operatingSystem = operatingSystem;
+    }
 
-        public Builder(ProductBasicInfo basicInfo, PricingInfo pricingInfo, Size size, ProductDetailsInfo productDetails) {
-            this.basicInfo = basicInfo;
-            this.pricingInfo = pricingInfo;
-            this.size = size;
-            this.productDetailsInfo = productDetails;
-        }
+    public boolean isInsured() {
+        return isInsured;
+    }
 
-        public Builder brand(String brand) {
-            this.brand = brand;
-            return this;
-        }
-
-        public Builder processor(String processor) {
-            this.processor = processor;
-            return this;
-        }
-
-        public Builder operatingSystem(String operatingSystem) {
-            this.operatingSystem = operatingSystem;
-            return this;
-        }
-
-        public Laptop build() {
-            return new Laptop(this);
-        }
+    public void setInsured(boolean isInsured) {
+        this.isInsured = isInsured;
     }
 }
+
 
 
