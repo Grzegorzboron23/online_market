@@ -1,8 +1,5 @@
 import attribute.Size;
-import employee.CEO;
-import employee.Cashier;
-import employee.Employee;
-import employee.Manager;
+import employee.*;
 import enumeration.Category;
 import enumeration.Position;
 import info.*;
@@ -10,31 +7,32 @@ import product.Book;
 import product.FoodProduct;
 import product.Laptop;
 import product.Product;
+import service.EmployeeService;
 import service.OnlineMarket;
-import service.ProductService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
+
     public static void main(String[] args) {
-        List<Product> productList = Main.fillProductList();
-        List<Employee> employeeList = Main.fillEmployeeList();
+        Product[] productArray = Main.fillProductArray();
+        Employee[] employeeArray = Main.fillEmployeeArray();
 
         OnlineMarket onlineMarket = new OnlineMarket();
-        onlineMarket.setProducts(productList);  // Setter used as product list may be modified later
-        onlineMarket.setEmployees(employeeList); // Setter used as employee list may be modified later
+        onlineMarket.setProducts(productArray);  // Setter used as product list may be modified later
+        onlineMarket.setEmployees(employeeArray); // Setter used as employee list may be modified later
 
-        System.out.println("Products: " + onlineMarket.getProducts());
-        System.out.println("Employees: " + onlineMarket.getEmployees());
+//        System.out.println("Products: " + onlineMarket.getProducts());
+//        System.out.println("Employees: " + onlineMarket.getEmployees());
 
-        System.out.println("Value of products: " + ProductService.countTotalValue(onlineMarket.getProducts()));
+//        System.out.println("Value of products: " + ProductService.countTotalValue(onlineMarket.getProducts()));
+
+        Main.demonstrateObjectMethodOverrides();
     }
 
-    public static List<Employee> fillEmployeeList() {
+    public static Employee[] fillEmployeeArray() {
         EmployeeInfo employeeInfo = new EmployeeInfo(BigDecimal.valueOf(1000), LocalDate.now(), Position.CEO);
 
         // Setting addressInfo via setters as it is optional for Employee creation
@@ -43,25 +41,20 @@ public class Main {
         addressInfo.setCity("Wroclaw");
         addressInfo.setStreet("Opolska");
 
-        CEO ceo = new CEO(employeeInfo); // employeeInfo is essential for CEO creation, so it's in the constructor
+        CEO ceo = new CEO(123456789, "X", "XX", employeeInfo); // employeeInfo is essential for CEO creation, so it's in the constructor
         ceo.setAddressInfo(addressInfo); // addressInfo is optional, so it's set through a setter
 
-        Manager manager = new Manager(employeeInfo); // employeeInfo is essential, so it's in the constructor
+        Manager manager = new Manager(123456789, "X", "XX", employeeInfo); // employeeInfo is essential, so it's in the constructor
         manager.setAddressInfo(addressInfo); // Optional addressInfo is set through a setter
         manager.setTeamSize(10); // teamSize can vary, so it's set via a setter
 
-        Cashier cashier = new Cashier(employeeInfo, 1); // employeeInfo is essential, passed through the constructor
+        Cashier cashier = new Cashier(123456789, "X", "XX", employeeInfo, 16); // employeeInfo is essential, passed through the constructor
         cashier.setAddressInfo(addressInfo); // Optional addressInfo is set through a setter
 
-        List<Employee> employeeList = new ArrayList<>();
-        employeeList.add(ceo);
-        employeeList.add(manager);
-        employeeList.add(cashier);
-
-        return employeeList;
+        return new Employee[]{ceo, manager, cashier};
     }
 
-    public static List<Product> fillProductList() {
+    public static Product[] fillProductArray() {
         ProductBasicInfo basicInfo = new ProductBasicInfo("X", Category.ELECTRONICS); // Essential information
         PricingInfo pricingInfo = new PricingInfo(BigDecimal.valueOf(10), 10); // Essential information
         Size size = new Size(30f, 20f, 1.5f); // Essential information
@@ -85,11 +78,60 @@ public class Main {
         foodProduct.setProductDetails(productDetailsInfo); // Optional product details set via setter
         foodProduct.setIsOrganic(true); // isOrganic is optional, set via setter
 
-        List<Product> products = new ArrayList<>();
-        products.add(laptop);
-        products.add(book);
-        products.add(foodProduct);
+        return new Product[]{laptop, book, foodProduct};
+    }
 
-        return products;
+    public static void demonstrateObjectMethodOverrides() {
+        EmployeeInfo employeeInfo = new EmployeeInfo();
+        Person person = new Employee(123, "X", "XX", employeeInfo);
+        Person person2 = new Trainee(123, "X", "XX");
+        Employee employee = new Employee(123, "X", "XX", employeeInfo);
+        Cashier cashier = new Cashier(1235, "X", "XX", employeeInfo, 647);
+
+//        toString method
+        System.out.println("To string methods");
+        System.out.println(employee); //toString result Person ... and default toString in employeeInfo like info.EmployeeInfo@...
+        System.out.println(cashier);
+        System.out.println(person);
+
+//        equalsMethod
+        System.out.println("Equals methods:");
+        System.out.println(employee.equals(person)); //true because it compares only by id not by memory
+        System.out.println(employee.equals(cashier)); //false because id is different
+
+        // hashCode method
+        System.out.println("hashCode output:");
+        System.out.println("employee.hashCode(): " + employee.hashCode());
+        System.out.println("person.hashCode(): " + person.hashCode());
+        //person and employee has the same hashcode because equals compares only they id's
+        System.out.println("cashier.hashCode(): " + cashier.hashCode());
+//        different because of id
+
+
+//        abstract method getRoleDescription
+        System.out.println("Abstract method:");
+        System.out.println(person.getRoleDescription()); //using getRoleDescription from employee because it's instantion of employee
+        System.out.println(employee.getRoleDescription());
+        System.out.println(cashier.getRoleDescription());  //using getRoleDescription from employee + adding more responsibilities
+        System.out.println(person2.getRoleDescription());  //using getRoleDescription from trainee
+
+//        Business method
+        System.out.println("Business method:");
+        EmployeeService.performDuties(person);
+        EmployeeService.performDuties(person2);
+        EmployeeService.performDuties(employee);
+        EmployeeService.performDuties(cashier);
+
+
+//       field of superclass
+        System.out.println("Super class field");
+        cashier.setSupervisor(person);
+        System.out.println("Supervisor of manager (generalEmployee): " + cashier.getSupervisorDescription()); //get responsibilities from employee
+
+        cashier.setSupervisor(person2);
+        System.out.println("Supervisor of manager (seniorManager): " + cashier.getSupervisorDescription()); //get responsibilities from trainee
+
+        System.out.println("Protected keyword");
+        employee.showHowProtectedKeywordWorks(); //instead of using getId() I can use direct id field
     }
 }

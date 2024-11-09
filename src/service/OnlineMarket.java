@@ -3,26 +3,24 @@ package service;
 import employee.Employee;
 import product.Product;
 
-import java.util.List;
-
 public class OnlineMarket {
 
-    private List<Product> products;
-    private List<Employee> employees;
+    private Product[] products;
+    private Employee[] employees;
 
-    public List<Product> getProducts() {
+    public Product[] getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Product[] products) {
         this.products = products;
     }
 
-    public List<Employee> getEmployees() {
+    public Employee[] getEmployees() {
         return employees;
     }
 
-    public void setEmployees(List<Employee> employees) {
+    public void setEmployees(Employee[] employees) {
         this.employees = employees;
     }
 }

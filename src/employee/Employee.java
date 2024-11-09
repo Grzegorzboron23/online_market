@@ -4,21 +4,24 @@ package employee;
 import info.AddressInfo;
 import info.EmployeeInfo;
 
-public class Employee {
+import java.util.Objects;
 
-    private EmployeeInfo employeesInfo;
+public class Employee extends Person{
+
+    private EmployeeInfo employeeInfo;
     private AddressInfo addressInfo;
 
-    public Employee(EmployeeInfo employeesInfo) {
-        this.employeesInfo = employeesInfo;
+    public Employee(int id, String name, String surname,EmployeeInfo employeesInfo) {
+        super(id, surname,name);
+        this.employeeInfo = employeesInfo;
     }
 
-    public EmployeeInfo getEmployeesInfo() {
-        return employeesInfo;
+    public EmployeeInfo getEmployeeInfo() {
+        return employeeInfo;
     }
 
-    public void setEmployeesInfo(EmployeeInfo employeesInfo) {
-        this.employeesInfo = employeesInfo;
+    public void setEmployeeInfo(EmployeeInfo employeeInfo) {
+        this.employeeInfo = employeeInfo;
     }
 
     public AddressInfo getAddressInfo() {
@@ -27,6 +30,39 @@ public class Employee {
 
     public void setAddressInfo(AddressInfo addressInfo) {
         this.addressInfo = addressInfo;
+    }
+
+    @Override
+    public String getRoleDescription() {
+        return "General employee with standard responsibilities.";
+    }
+
+    @Override
+    public String toString() {
+        return  super.toString() + " Employee{" +
+                "employeesInfo=" + employeeInfo +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), employeeInfo);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return getId() == person.getId();
+    }
+
+    public void showHowProtectedKeywordWorks(){
+        System.out.println("Id " + id);
+        System.out.println("Name " + name);
+        System.out.println("Surname " + surname);
+        System.out.println("Phone " + phoneNumber);
+        System.out.println("Email " + email);
     }
 }
 
