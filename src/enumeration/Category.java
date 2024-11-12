@@ -4,12 +4,7 @@ public enum Category {
 
     ELECTRONICS("Electronics"),
     FOOD("Food"),
-    CLOTHING("Clothing"),
-    HOME_APPLIANCES("Home Appliances"),
-    TOYS("Toys"),
-    BEAUTY("Beauty"),
-    BOOKS("Books"),
-    SPORTS("Sports");
+    BOOKS("Books");
 
     private final String categoryName;
 

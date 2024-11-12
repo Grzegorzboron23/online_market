@@ -6,13 +6,13 @@ import info.EmployeeInfo;
 
 import java.util.Objects;
 
-public class Employee extends Person{
+public class Employee extends Person {
 
     private EmployeeInfo employeeInfo;
     private AddressInfo addressInfo;
 
-    public Employee(int id, String name, String surname,EmployeeInfo employeesInfo) {
-        super(id, surname,name);
+    public Employee(int id, String name, String surname, EmployeeInfo employeesInfo) {
+        super(id, surname, name);
         this.employeeInfo = employeesInfo;
     }
 
@@ -39,7 +39,7 @@ public class Employee extends Person{
 
     @Override
     public String toString() {
-        return  super.toString() + " Employee{" +
+        return super.toString() + " Employee{" +
                 "employeesInfo=" + employeeInfo +
                 '}';
     }
@@ -57,7 +57,7 @@ public class Employee extends Person{
         return getId() == person.getId();
     }
 
-    public void showHowProtectedKeywordWorks(){
+    public void showHowProtectedKeywordWorks() {
         System.out.println("Id " + id);
         System.out.println("Name " + name);
         System.out.println("Surname " + surname);

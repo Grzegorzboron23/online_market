@@ -1,6 +1,7 @@
 package employee;
 
-public class Trainee extends Person{
+public class Trainee extends Person {
+
     public Trainee(int id, String name, String surname) {
         super(id, name, surname);
     }

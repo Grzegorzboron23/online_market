@@ -8,8 +8,8 @@ public class Manager extends Employee {
     private int teamSize;
 
     public Manager(int id, String name,
-                   String surname, EmployeeInfo employeeInfo ) {
-        super(id,name,surname,employeeInfo);
+                   String surname, EmployeeInfo employeeInfo) {
+        super(id, name, surname, employeeInfo);
     }
 
     public int getTeamSize() {

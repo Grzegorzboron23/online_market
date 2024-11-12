@@ -6,13 +6,14 @@ import info.EmployeeInfo;
 import java.util.Objects;
 
 public class Cashier extends Employee {
-    private Person supervisor;
+
     private final int registerNumber;
+    private Person supervisor;
 
     public Cashier(int id, String name,
                    String surname, EmployeeInfo employeeInfo,
                    int registerNumber) {
-        super(id,name,surname,employeeInfo);
+        super(id, name, surname, employeeInfo);
         this.registerNumber = registerNumber;
     }
 
@@ -21,7 +22,7 @@ public class Cashier extends Employee {
     }
 
 
-//    Just to show how use it
+    //    Just to show how use it
     @Override
     public String getRoleDescription() {
         return super.getRoleDescription() + " responsible for cash";
@@ -47,12 +48,12 @@ public class Cashier extends Employee {
                 '}';
     }
 
-    public void setSupervisor(Person supervisor) {
-        this.supervisor = supervisor;
-    }
-
     public Person getSupervisor() {
         return supervisor;
+    }
+
+    public void setSupervisor(Person supervisor) {
+        this.supervisor = supervisor;
     }
 
     public String getSupervisorDescription() {

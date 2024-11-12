@@ -10,7 +10,7 @@ public abstract class Person {
     protected int phoneNumber;
     protected String email;
 
-    public Person( int id,String name, String surname) {
+    public Person(int id, String name, String surname) {
         this.name = name;
         this.surname = surname;
         this.id = id;
