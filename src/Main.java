@@ -7,11 +7,15 @@ import product.Book;
 import product.FoodProduct;
 import product.Laptop;
 import product.Product;
+import productInterface.Spoiled;
+import profitCalculator.ProductCalculator;
 import service.EmployeeService;
 import service.OnlineMarket;
+import warehouse.Warehouse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
 
@@ -28,7 +32,8 @@ public class Main {
 
 //        System.out.println("Value of products: " + ProductService.countTotalValue(onlineMarket.getProducts()));
 
-        Main.demonstrateObjectMethodOverrides();
+//        Main.demonstrateObjectMethodOverrides();
+        Main.demonstrateFinalStaticAndInterface();
     }
 
     public static Employee[] fillEmployeeArray() {
@@ -64,12 +69,12 @@ public class Main {
         productDetailsInfo.setIsAvailable(true);
 
         Book book = new Book(basicInfo, pricingInfo, size,
-                "Author Name", 200, "Fiction"); // Essential book details passed via constructor
+                "Author Name", 200, "Fiction", "233"); // Essential book details passed via constructor
         book.setProductDetails(productDetailsInfo); // Optional product details are set via setter
         book.setPublisher("publisher name"); // Publisher may be assigned later, so it's set via setter
 
         Laptop laptop = new Laptop(basicInfo, pricingInfo, size,
-                "BrandName", "Intel i7", "Windows 10"); // Essential laptop details passed via constructor
+                "BrandName", "Intel i7", "Windows 10", 2.0, 5); // Essential laptop details passed via constructor
         laptop.setProductDetails(productDetailsInfo); // Optional product details set via setter
 
         FoodProduct foodProduct = new FoodProduct(basicInfo, pricingInfo, size,
@@ -132,5 +137,77 @@ public class Main {
 
         System.out.println("Protected keyword");
         employee.showHowProtectedKeywordWorks(); //instead of using getId() I can use direct id field
+    }
+
+    public static void demonstrateFinalStaticAndInterface() {
+        ProductBasicInfo basicInfo = new ProductBasicInfo("X", Category.ELECTRONICS); // Essential information
+        PricingInfo pricingInfo = new PricingInfo(BigDecimal.valueOf(10), 10); // Essential information
+        Size size = new Size(30f, 20f, 1.5f); // Essential information
+
+        // productDetailsInfo set via setters as it is optional information
+        ProductDetailsInfo productDetailsInfo = new ProductDetailsInfo();
+        productDetailsInfo.setDescription("X");
+        productDetailsInfo.setIsAvailable(true);
+
+        Book book = new Book(basicInfo, pricingInfo, size,
+                "Author Name", 200, "Fiction", "233"); // Essential book details passed via constructor
+        book.setProductDetails(productDetailsInfo); // Optional product details are set via setter
+        book.setPublisher("publisher name"); // Publisher may be assigned later, so it's set via setter
+
+        Laptop laptop = new Laptop(basicInfo, pricingInfo, size,
+                "BrandName", "Intel i7", "Windows 10", 2.0, 5); // Essential laptop details passed via constructor
+        laptop.setProductDetails(productDetailsInfo); // Optional product details set via setter
+
+        FoodProduct foodProduct = new FoodProduct(basicInfo, pricingInfo, size,
+                "OrganicBrand"); // Brand is essential, so passed via constructor
+        foodProduct.setProductDetails(productDetailsInfo); // Optional product details set via setter
+        foodProduct.setIsOrganic(true); // isOrganic is optional, set via setter
+
+
+//        Static and final keyword
+        System.out.println("Product calculator ");
+        System.out.println("Calculate Profit " + ProductCalculator.calculateProfit(
+                laptop.getPricingInfo().getPrice(),
+                Laptop.getProductionCost()));
+        System.out.println("Get available discount " + ProductCalculator.getAvailableDiscount());
+
+        System.out.println("Final method");
+        System.out.println("Calculate Surface Area " + laptop.calculateSurfaceArea());
+
+//        Interfaces
+        System.out.println("ISBN number " + book.isValidISBN());
+        System.out.println("ISBN number " + book.getISBN());
+
+        System.out.println("Interface check method laptop lightweight" + laptop.isLightweight());
+
+        System.out.println("Inteface as field in class");
+        Warehouse warehouse = new Warehouse(foodProduct);
+        warehouse.checkProductStatus();
+
+        System.out.println("Inteface as parameter in method ");
+        checkSpoilage(foodProduct);
+
+        System.out.println("Collection ");
+        checkAllSpoiled(List.of(foodProduct));
+
+    }
+
+    public static void checkSpoilage(Spoiled item) {
+        if (item.isSpoiled()) {
+            System.out.println("The product is spoiled.");
+        } else {
+            System.out.println("The product is still good.");
+        }
+    }
+
+    public static void checkAllSpoiled(List<Spoiled> items) {
+        for (Spoiled item : items) {
+            System.out.println("Checking product...");
+            if (item.isSpoiled()) {
+                System.out.println("The product is spoiled.");
+            } else {
+                System.out.println("The product is in good condition.");
+            }
+        }
     }
 }

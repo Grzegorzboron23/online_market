@@ -47,4 +47,15 @@ public abstract class Product {
     public void setProductDetails(ProductDetailsInfo productDetails) {
         this.productDetails = productDetails;
     }
+
+    // Final method to calculate the surface area of the rectangular prism represented by this Size.
+    //final to cannot override method in subclasses
+    public final Float calculateSurfaceArea() {
+        return 2 * (
+                size.getWidth() * size.getHeight() +
+                        size.getHeight() * size.getDepth() +
+                        size.getWidth() * size.getDepth()
+        );
+    }
+
 }
