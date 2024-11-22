@@ -41,7 +41,13 @@ public class Main {
 //        Main.demonstrateFinalStaticAndInterface();
 
 //        Exceptions methods
-        Main.demonstrateExceptions();
+        try {
+            demonstrateExceptions();
+        } catch (RuntimeException e) {
+            System.err.println("Critical error : " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
         Main.getFileInfo();
     }
 
@@ -211,15 +217,7 @@ public class Main {
         EmployeeInfo employeeInfo = new EmployeeInfo(BigDecimal.valueOf(1000), LocalDate.now(), Position.CEO);
         AddressInfo addressInfo = new AddressInfo();
 
-        try {
-            // Checked exception assuming that user is typing address info
-            // don't need to be surrounded by try catch block
-            addressInfo.setStreet("Street1");
-            addressInfo.setCountry("P"); // This will throw an exception
-            addressInfo.setCity("Wroclaw");
-        } catch (InvalidAddressException e) {
-            System.out.println("Error while setting address: " + e.getMessage());
-        }
+        handleAddressSetting(addressInfo);
 
         try {
             // Unchecked exception assuming we use calculator in our program to calculate salary
@@ -244,9 +242,18 @@ public class Main {
             Cashier cashier = new Cashier(-123, "X", "XX", employeeInfo, 647);
         } catch (IllegalArgumentException e) {
             System.err.println("Error while creating cashier: " + e.getMessage());
+            throw new RuntimeException("Critical error by creating cashier", e);
         }
+    }
 
-        System.out.println("Program still works after all operations");
+    private static void handleAddressSetting(AddressInfo addressInfo) {
+        try {
+            addressInfo.setStreet("Street1");
+            addressInfo.setCountry("P"); // This will throw an exception
+            addressInfo.setCity("Wroclaw");
+        } catch (InvalidAddressException e) {
+            System.out.println("Error while setting address in helper method: " + e.getMessage());
+        }
     }
 
 
