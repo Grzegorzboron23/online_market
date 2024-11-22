@@ -2,6 +2,7 @@ package info;
 
 
 import enumeration.Position;
+import exception.InvalidSalaryException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,6 +35,9 @@ public class EmployeeInfo {
     }
 
     public void setSalary(BigDecimal salary) {
+        if (salary == null || salary.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidSalaryException("Salary must not be null or negative");
+        }
         this.salary = salary;
     }
 

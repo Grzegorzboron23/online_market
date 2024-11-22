@@ -12,8 +12,7 @@ public class EmployeeService {
 
         emailMessage.append("Dear ").append(person.getName()).append(",\n\n");
 
-        if (person instanceof Cashier) {
-            Cashier cashier = (Cashier) person;
+        if (person instanceof Cashier cashier) {
             emailMessage.append("As a Cashier, please ensure that your register (number ")
                     .append(cashier.getRegisterNumber())
                     .append(") is prepared and that you handle all transactions accurately.\n");

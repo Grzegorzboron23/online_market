@@ -1,6 +1,7 @@
 package employee;
 
 
+import exception.InvalidRegisterNumberException;
 import info.EmployeeInfo;
 
 import java.util.Objects;
@@ -14,6 +15,11 @@ public class Cashier extends Employee {
                    String surname, EmployeeInfo employeeInfo,
                    int registerNumber) {
         super(id, name, surname, employeeInfo);
+
+        if (registerNumber <= 0) {
+            throw new InvalidRegisterNumberException("Error wrong number");
+        }
+
         this.registerNumber = registerNumber;
     }
 

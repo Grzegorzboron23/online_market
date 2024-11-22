@@ -1,5 +1,7 @@
 package info;
 
+import exception.InvalidAddressException;
+
 public class AddressInfo {
 
     private String street;
@@ -19,7 +21,10 @@ public class AddressInfo {
         return street;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(String street) throws InvalidAddressException {
+        if (street == null || street.length() < 3) {
+            throw new InvalidAddressException("Street name must be at least 3 characters long");
+        }
         this.street = street;
     }
 
@@ -27,7 +32,10 @@ public class AddressInfo {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(String city) throws InvalidAddressException {
+        if (city == null || city.length() < 3) {
+            throw new InvalidAddressException("City name must be at least 3 characters long");
+        }
         this.city = city;
     }
 
@@ -35,7 +43,10 @@ public class AddressInfo {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(String country) throws InvalidAddressException {
+        if (city == null || city.length() < 3) {
+            throw new InvalidAddressException("Country name must be at least 3 characters long");
+        }
         this.country = country;
     }
 }

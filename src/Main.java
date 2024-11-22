@@ -2,6 +2,9 @@ import attribute.Size;
 import employee.*;
 import enumeration.Category;
 import enumeration.Position;
+import exception.FileProcessingException;
+import exception.InvalidAddressException;
+import exception.InvalidSalaryException;
 import info.*;
 import product.Book;
 import product.FoodProduct;
@@ -11,6 +14,8 @@ import productInterface.Spoiled;
 import profitCalculator.ProductCalculator;
 import service.EmployeeService;
 import service.OnlineMarket;
+import utils.FileReadUtil;
+import utils.FileReadWithResourcesUtil;
 import warehouse.Warehouse;
 
 import java.math.BigDecimal;
@@ -33,17 +38,27 @@ public class Main {
 //        System.out.println("Value of products: " + ProductService.countTotalValue(onlineMarket.getProducts()));
 
 //        Main.demonstrateObjectMethodOverrides();
-        Main.demonstrateFinalStaticAndInterface();
+//        Main.demonstrateFinalStaticAndInterface();
+
+//        Exceptions methods
+        Main.demonstrateExceptions();
+        Main.getFileInfo();
     }
+
 
     public static Employee[] fillEmployeeArray() {
         EmployeeInfo employeeInfo = new EmployeeInfo(BigDecimal.valueOf(1000), LocalDate.now(), Position.CEO);
 
         // Setting addressInfo via setters as it is optional for Employee creation
         AddressInfo addressInfo = new AddressInfo();
-        addressInfo.setCountry("Poland");
-        addressInfo.setCity("Wroclaw");
-        addressInfo.setStreet("Opolska");
+
+        try {
+            addressInfo.setCountry("Poland");
+            addressInfo.setCity("Wroclaw");
+            addressInfo.setStreet("Opolska");
+        } catch (InvalidAddressException e) {
+            System.out.println("Error " + e.getMessage());
+        }
 
         CEO ceo = new CEO(123456789, "X", "XX", employeeInfo); // employeeInfo is essential for CEO creation, so it's in the constructor
         ceo.setAddressInfo(addressInfo); // addressInfo is optional, so it's set through a setter
@@ -189,6 +204,67 @@ public class Main {
 
         System.out.println("Collection ");
         checkAllSpoiled(List.of(foodProduct));
+
+    }
+
+    public static void demonstrateExceptions() {
+        EmployeeInfo employeeInfo = new EmployeeInfo(BigDecimal.valueOf(1000), LocalDate.now(), Position.CEO);
+        AddressInfo addressInfo = new AddressInfo();
+
+        try {
+            // Checked exception assuming that user is typing address info
+            // don't need to be surrounded by try catch block
+            addressInfo.setStreet("Street1");
+            addressInfo.setCountry("P"); // This will throw an exception
+            addressInfo.setCity("Wroclaw");
+        } catch (InvalidAddressException e) {
+            System.out.println("Error while setting address: " + e.getMessage());
+        }
+
+        try {
+            // Unchecked exception assuming we use calculator in our program to calculate salary
+            // don't need to be surrounded by try catch block
+            employeeInfo.setSalary(BigDecimal.valueOf(-1L));
+        } catch (InvalidSalaryException e) {
+            System.err.println("Error while setting salary: " + e.getMessage());
+        }
+
+        Size size = new Size(10f, 10f, 10f);
+        try {
+            //Unchecked  Assuming program calculates height of a product after some accident
+            // don't need to be surrounded by try catch block
+            size.setHeight(-10f);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error while setting height: " + e.getMessage());
+        }
+
+        try {
+            // Unchecked exception assuming the ID number is auto-created by a database
+            // don't need to be surrounded by try catch block
+            Cashier cashier = new Cashier(-123, "X", "XX", employeeInfo, 647);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error while creating cashier: " + e.getMessage());
+        }
+
+        System.out.println("Program still works after all operations");
+    }
+
+
+    public static void getFileInfo() {
+        String filePath = "example.txt";
+        try {
+            List<String> fileContents = FileReadWithResourcesUtil.getResourcesFromFile(filePath);
+            fileContents.forEach(System.out::println);
+        } catch (FileProcessingException e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+
+        try {
+            List<String> fileContents = FileReadUtil.getResourcesFromFile(filePath);
+            fileContents.forEach(System.out::println);
+        } catch (FileProcessingException e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
 
     }
 

@@ -18,10 +18,10 @@ public class Laptop extends Product implements Deliverable, Portable, Configurab
     private static final Category category = Category.ELECTRONICS;
     //    Cannot change brand no setter final
     private final String brand;
+    private final Double weight;
     private String processor;
     private String operatingSystem;
     private boolean isInsured;
-    private Double weight;
     private int ram;
 
     public Laptop(ProductBasicInfo basicInfo, PricingInfo pricingInfo,
