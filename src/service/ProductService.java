@@ -4,7 +4,10 @@ package service;
 import product.Product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductService {
 
@@ -16,5 +19,54 @@ public class ProductService {
             );
         }
         return totalValue;
+    }
+
+    public static Float countTotalSpaceForProductsInWareHouse(List<Product> products) {
+        if (products.isEmpty()) {
+            throw new IllegalArgumentException("Provide some products");
+        }
+
+        float result = 0;
+        float MARGIN = 0.5f;
+
+        for (Product product : products) {
+            if (product == null) {
+                System.err.println("Skip null product");
+                continue;
+            }
+
+            result += product.calculateSurfaceArea() + MARGIN;
+        }
+        return result;
+    }
+
+    public static Map<String, List<Product>> categorizeProductsBySize(List<Product> products) {
+        if (products == null || products.isEmpty()) {
+            throw new IllegalArgumentException("Provide some products");
+        }
+
+        Map<String, List<Product>> categorizedProducts = new HashMap<>();
+
+        for (Product product : products) {
+            if (product == null) {
+                System.err.println("Skipping invalid product");
+                continue;
+            }
+
+            float surfaceArea = product.calculateSurfaceArea();
+            String category;
+
+            if (surfaceArea < 10) {
+                category = "Small";
+            } else if (surfaceArea <= 50) {
+                category = "Medium";
+            } else {
+                category = "Large";
+            }
+
+            categorizedProducts.computeIfAbsent(category, key -> new ArrayList<>()).add(product);
+        }
+
+        return categorizedProducts;
     }
 }
