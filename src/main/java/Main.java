@@ -331,7 +331,7 @@ public class Main {
         customLinkedList.add(0, cashier);
 
 
-        System.out.println("Does list conatains 'Cashier'? " + customLinkedList.contains(cashier));
+        System.out.println("Does list contains 'Cashier'? " + customLinkedList.contains(cashier));
 
         // Get index element
         System.out.println("'Cashier' index : " + customLinkedList.indexOf(cashier));

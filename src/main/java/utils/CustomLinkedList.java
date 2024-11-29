@@ -71,7 +71,19 @@ public class CustomLinkedList<T> implements List<T> {
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
-        return null;
+        Objects.requireNonNull(a);
+        int index = 0;
+
+        Node<T> current = head;
+        while (current != null) {
+            a[index++] = (T1) current.data;
+            current = current.next;
+        }
+
+        if (a.length > size) {
+            a[size] = null;
+        }
+        return a;
     }
 
     @Override
@@ -233,17 +245,50 @@ public class CustomLinkedList<T> implements List<T> {
 
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException("subList not supported");
+        subListRangeCheck(fromIndex, toIndex, size);
+        List<T> subList = new CustomLinkedList<T>();
+
+        for(int i=fromIndex; i<toIndex;i++){
+            subList.add(get(i));
+        }
+
+        return subList;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("retainAll not supported");
+        Objects.requireNonNull(c);
+
+        boolean modified = false;
+        Iterator<T> iterator = iterator();
+
+        while(iterator().hasNext()){
+            T element = iterator().next();
+
+            if(!c.contains(element)){
+                iterator.remove();
+                modified = true;
+            }
+        }
+        return modified;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException("removeAll not supported");
+        Objects.requireNonNull(c);
+
+        Iterator<T> iterator = iterator();
+        boolean modified = false;
+
+        while(iterator.hasNext()){
+            T element = iterator.next();
+            if (c.contains(element)) {
+                iterator.remove();
+                modified = true;
+            }
+        }
+
+        return modified;
     }
 
     @Override
@@ -270,5 +315,15 @@ public class CustomLinkedList<T> implements List<T> {
             this.data = data;
             this.next = null;
         }
+    }
+
+    public static void subListRangeCheck(int fromIndex, int toIndex, int size) {
+        if (fromIndex < 0)
+            throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
+        if (toIndex > size)
+            throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+        if (fromIndex > toIndex)
+            throw new IllegalArgumentException("fromIndex(" + fromIndex +
+                    ") > toIndex(" + toIndex + ")");
     }
 }
