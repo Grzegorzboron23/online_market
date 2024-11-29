@@ -12,6 +12,16 @@ public class CustomLinkedList<T> implements List<T> {
         this.size = 0;
     }
 
+    public static void subListRangeCheck(int fromIndex, int toIndex, int size) {
+        if (fromIndex < 0)
+            throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
+        if (toIndex > size)
+            throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+        if (fromIndex > toIndex)
+            throw new IllegalArgumentException("fromIndex(" + fromIndex +
+                    ") > toIndex(" + toIndex + ")");
+    }
+
     @Override
     public int size() {
         return size;
@@ -248,7 +258,7 @@ public class CustomLinkedList<T> implements List<T> {
         subListRangeCheck(fromIndex, toIndex, size);
         List<T> subList = new CustomLinkedList<T>();
 
-        for(int i=fromIndex; i<toIndex;i++){
+        for (int i = fromIndex; i < toIndex; i++) {
             subList.add(get(i));
         }
 
@@ -262,10 +272,10 @@ public class CustomLinkedList<T> implements List<T> {
         boolean modified = false;
         Iterator<T> iterator = iterator();
 
-        while(iterator().hasNext()){
+        while (iterator().hasNext()) {
             T element = iterator().next();
 
-            if(!c.contains(element)){
+            if (!c.contains(element)) {
                 iterator.remove();
                 modified = true;
             }
@@ -280,7 +290,7 @@ public class CustomLinkedList<T> implements List<T> {
         Iterator<T> iterator = iterator();
         boolean modified = false;
 
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             T element = iterator.next();
             if (c.contains(element)) {
                 iterator.remove();
@@ -315,15 +325,5 @@ public class CustomLinkedList<T> implements List<T> {
             this.data = data;
             this.next = null;
         }
-    }
-
-    public static void subListRangeCheck(int fromIndex, int toIndex, int size) {
-        if (fromIndex < 0)
-            throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
-        if (toIndex > size)
-            throw new IndexOutOfBoundsException("toIndex = " + toIndex);
-        if (fromIndex > toIndex)
-            throw new IllegalArgumentException("fromIndex(" + fromIndex +
-                    ") > toIndex(" + toIndex + ")");
     }
 }
