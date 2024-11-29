@@ -33,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.solvd.Main</mainClass>
+                            <mainClass>com.solvd.onlinemarket.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
