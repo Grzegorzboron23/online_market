@@ -30,3 +30,18 @@ Description: Deploys the .jar file to a remote Maven repository.
 Result: If a remote repository is configured, the .jar file will be uploaded.
 
 In my case -> Deployment failed: repository element was not specified in the POM inside distributionManagement element or in -DaltDeploymentRepository=id::layout::url parameter ->
+
+# Run Project with Maven
+To run the project and set the log level dynamically, follow these steps:
+
+## Open the project directory in the terminal
+Navigate to the root directory of the project where the pom.xml file is located.
+
+## Set the log level using an environment variable
+
+#### For Windows (CMD):
+```cmd
+set LOG_LEVEL=warn
+mvn exec:java -Dexec.mainClass="com.solvd.onlinemarket.Main"
+
+
