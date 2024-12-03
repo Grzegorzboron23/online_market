@@ -81,9 +81,7 @@ public class Main {
             String inputFilePath = new File(inputResource.toURI()).getAbsolutePath();
 
             String outputFilePath = "src/main/resources/output.txt";
-
-            BookService bookService = new BookService();
-            int uniqueWordCount = bookService.countWordsInBook(inputFilePath, outputFilePath);
+            int uniqueWordCount = BookService.countWordsInBook(inputFilePath, outputFilePath);
 
             logger.info("Number of unique words: {}", uniqueWordCount);
         } catch (Exception e) {
