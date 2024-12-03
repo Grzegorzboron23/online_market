@@ -34,7 +34,7 @@ public class Employee extends Person {
 
     @Override
     public String getRoleDescription() {
-        return "General com.solvd.onlinemarket.employee with standard responsibilities.";
+        return "General employee with standard responsibilities.";
     }
 
     @Override

@@ -44,7 +44,7 @@ public class AddressInfo {
     }
 
     public void setCountry(String country) throws InvalidAddressException {
-        if (city == null || city.length() < 3) {
+        if (country == null || country.length() < 3) {
             throw new InvalidAddressException("Country name must be at least 3 characters long");
         }
         this.country = country;
