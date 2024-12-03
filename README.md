@@ -42,6 +42,7 @@ Navigate to the root directory of the project where the pom.xml file is located.
 #### For Windows (CMD):
 ```cmd
 set LOG_LEVEL=warn
+mvn compile
 mvn exec:java -Dexec.mainClass="com.solvd.onlinemarket.Main"
 
 
