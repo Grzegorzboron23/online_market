@@ -14,8 +14,8 @@ import com.solvd.onlinemarket.product.Laptop;
 import com.solvd.onlinemarket.product.Product;
 import com.solvd.onlinemarket.productInterface.Spoiled;
 import com.solvd.onlinemarket.profitCalculator.ProductCalculator;
+import com.solvd.onlinemarket.service.BookService;
 import com.solvd.onlinemarket.service.EmployeeService;
-import com.solvd.onlinemarket.service.OnlineMarket;
 import com.solvd.onlinemarket.service.ProductService;
 import com.solvd.onlinemarket.utils.CustomLinkedList;
 import com.solvd.onlinemarket.utils.FileReadUtil;
@@ -24,7 +24,9 @@ import com.solvd.onlinemarket.warehouse.Warehouse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -39,13 +41,15 @@ public class Main {
 
     public static void main(String[] args) {
         logger.debug("Start program");
-        
-        List<Product> productList = Main.fillProductArray();
-        List<Employee> employeeList = Main.fillEmployeeArray();
 
-        OnlineMarket onlineMarket = new OnlineMarket();
-        onlineMarket.setProducts(productList);  // Setter used as product list may be modified later
-        onlineMarket.setEmployees(employeeList); // Setter used as employee list may be modified later
+//        List<Product> productList = Main.fillProductArray();
+//        List<Employee> employeeList = Main.fillEmployeeArray();
+
+//        OnlineMarket onlineMarket = new OnlineMarket();
+//        onlineMarket.setProducts(productList);
+        // Setter used as product list may be modified later
+//        onlineMarket.setEmployees(employeeList);
+        // Setter used as employee list may be modified later
 
 //        logger.info("Products: {}", onlineMarket.getProducts());
 //        logger.info("Employees: {}", onlineMarket.getEmployees());
@@ -65,8 +69,26 @@ public class Main {
 //        }
 //        Main.getFileInfo();
 
-        Main.demonstrateCollections();
-        Main.demonstrateGenerics();
+//        Main.demonstrateCollections();
+//        Main.demonstrateGenerics();
+
+        Main.demonstrateApacheLibraries();
+    }
+
+    private static void demonstrateApacheLibraries() {
+        try {
+            URL inputResource = Main.class.getResource("/bookForKids.txt");
+            String inputFilePath = new File(inputResource.toURI()).getAbsolutePath();
+
+            String outputFilePath = "src/main/resources/output.txt";
+
+            BookService bookService = new BookService();
+            int uniqueWordCount = bookService.countWordsInBook(inputFilePath, outputFilePath);
+
+            logger.info("Number of unique words: {}", uniqueWordCount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
