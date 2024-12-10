@@ -2,12 +2,18 @@ package com.solvd.onlinemarket.service;
 
 import com.solvd.onlinemarket.employee.*;
 import com.solvd.onlinemarket.exception.InvalidArgumentException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class EmployeeService {
+
+    private static final Logger logger = LogManager.getLogger(EmployeeService.class);
 
     public static String generateEmail(Person person) {
         StringBuilder emailMessage = new StringBuilder();
@@ -111,6 +117,30 @@ public class EmployeeService {
         System.out.println("Email generated for " + person.getName() + ":\n");
         System.out.println(emailMessage);
         System.out.println("Completed duties for: " + person.getRoleDescription());
+    }
+
+    public static void changeSalary(List<Employee> employeeList, double randomValue) {
+        Consumer<List<Employee>> raiseSalary = employees ->
+                employees.forEach(employee -> {
+                    BigDecimal currentSalary = employee.getEmployeeInfo().getSalary();
+                    employee.getEmployeeInfo().setSalary(currentSalary.multiply(BigDecimal.valueOf(randomValue)));
+                });
+
+        Consumer<List<Employee>> logSalaries = employees ->
+                employees.forEach(employee ->
+                        logger.info("Employee name and salary: {} - {}",
+                                employee.getName(), employee.getEmployeeInfo().getSalary()));
+
+        logSalaries.andThen(raiseSalary).andThen(logSalaries).accept(employeeList);
+    }
+
+    public static Function<List<Employee>, BigDecimal> getBiggestSalary() {
+        return employees ->
+                employees.stream()
+                        .map(employee -> employee.getEmployeeInfo().getSalary())
+                        .max(BigDecimal::compareTo)
+                        .orElse(BigDecimal.ZERO);
+
     }
 }
 

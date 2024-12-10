@@ -2,10 +2,11 @@ package com.solvd.onlinemarket;
 
 import com.solvd.onlinemarket.attribute.Size;
 import com.solvd.onlinemarket.employee.*;
-import com.solvd.onlinemarket.enumeration.Category;
-import com.solvd.onlinemarket.enumeration.Position;
+import com.solvd.onlinemarket.employeeInterface.functionalInterface.CustomLambda;
+import com.solvd.onlinemarket.enumeration.*;
 import com.solvd.onlinemarket.exception.FileProcessingException;
 import com.solvd.onlinemarket.exception.InvalidAddressException;
+import com.solvd.onlinemarket.exception.InvalidArgumentException;
 import com.solvd.onlinemarket.exception.InvalidSalaryException;
 import com.solvd.onlinemarket.info.*;
 import com.solvd.onlinemarket.product.Book;
@@ -17,9 +18,7 @@ import com.solvd.onlinemarket.profitCalculator.ProductCalculator;
 import com.solvd.onlinemarket.service.BookService;
 import com.solvd.onlinemarket.service.EmployeeService;
 import com.solvd.onlinemarket.service.ProductService;
-import com.solvd.onlinemarket.utils.CustomLinkedList;
-import com.solvd.onlinemarket.utils.FileReadUtil;
-import com.solvd.onlinemarket.utils.FileReadWithResourcesUtil;
+import com.solvd.onlinemarket.utils.*;
 import com.solvd.onlinemarket.warehouse.Warehouse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,7 +71,25 @@ public class Main {
 //        Main.demonstrateCollections();
 //        Main.demonstrateGenerics();
 
-        Main.demonstrateApacheLibraries();
+//        Main.demonstrateApacheLibraries();
+
+        Main.demonstrateEnums();
+        Main.demonstrateLambdas();
+        Main.demonstrateCustomLambda();
+    }
+
+    private static void demonstrateCustomLambda() {
+        CustomLambda<Integer, String> intToString = number -> "Number: " + number;
+        CustomLambda<String, Integer> stringLength = text -> text.length();
+        CustomLambda<Integer, Integer> square = num -> num * num;
+
+        CustomLambda<Integer, Integer> lengthOfStringifiedNumber =
+                intToString.andThen(stringLength);
+
+        logger.info(intToString.apply(10)); // "Number: 10"
+        logger.info(stringLength.apply("Hello World")); // 11
+        logger.info(square.apply(5)); // 25
+        logger.info(lengthOfStringifiedNumber.apply(10)); // 9
     }
 
     private static void demonstrateApacheLibraries() {
@@ -374,6 +391,98 @@ public class Main {
 
     }
 
+    public static void demonstrateEnums() {
+        ProductBasicInfo basicInfo = new ProductBasicInfo("X", Category.ELECTRONICS); // Essential information
+        PricingInfo pricingInfo = new PricingInfo(BigDecimal.valueOf(10), 10); // Essential information
+        Size size = new Size(30f, 20f, 1.5f); // Essential information
+        ProductDetailsInfo productDetailsInfo = new ProductDetailsInfo();
+        productDetailsInfo.setDescription("X");
+        productDetailsInfo.setIsAvailable(true);
+
+        Book book = new Book(basicInfo, pricingInfo, size,
+                "Author Name", 200, "Fiction", "233"); // Essential book details passed via constructor
+        book.setProductDetails(productDetailsInfo); // Optional product details are set via setter
+        book.setPublisher("publisher name"); // Publisher may be assigned later, so it's set via setter
+
+        Laptop laptop = new Laptop(basicInfo, pricingInfo, size,
+                "BrandName", "Intel i7", "Windows 10", 2.0, 5); // Essential laptop details passed via constructor
+        laptop.setProductDetails(productDetailsInfo); // Optional product details set via setter
+
+
+        book.setPriorityType(PriorityType.HIGH);
+        logger.info("Message to supplier{} ", book.getPriorityType().messageToSupplier());
+
+        switch (book.getPriorityType()) {
+            case LOW -> logger.info("Low priority 5 days to go..");
+            case MEDIUM -> logger.info("Medium priority 2 days to go ...");
+            case HIGH -> logger.warn("High priority send it immediately");
+            default -> {
+                logger.error("Unknown priority type");
+                throw new InvalidArgumentException("Unknown priority type");
+            }
+        }
+
+        logger.info("Planet delivery info " + Planets.EARTH.deliverPlanetTime(book.getBasicInfo().getName()));
+
+        PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+
+        switch (paymentMethod) {
+            case CASH -> logger.info("You selected CASH. Please have the exact amount ready.");
+            case CREDIT_CARD -> logger.info("You selected CREDIT CARD. Processing your payment...");
+            case DEBIT_CARD -> logger.info("You selected DEBIT CARD. Processing your payment...");
+            case PAYPAL -> logger.info("You selected PAYPAL. Redirecting to PayPal...");
+            default -> logger.info("Unknown payment method.");
+        }
+
+        DayOfWeek today = DayOfWeek.SATURDAY;
+
+        if (isWeekend(today)) {
+            logger.info("It's the weekend! Time to relax.");
+        } else {
+            logger.info("It's a weekday. Back to work!");
+        }
+    }
+
+    public static void demonstrateLambdas() {
+        EmployeeInfo employeeInfo = new EmployeeInfo();
+        Employee employee = new Employee(123, "X", "XX", employeeInfo);
+        employee.getEmployeeInfo().setSalary(BigDecimal.valueOf(36500));
+        employee.getEmployeeInfo().setPosition(Position.CASHIER);
+
+        EmployeeInfo employeeInfo2 = new EmployeeInfo();
+        Employee employee2 = new Employee(1237, "X", "XXXX", employeeInfo2);
+        employee2.getEmployeeInfo().setSalary(BigDecimal.valueOf(38500));
+        employee2.getEmployeeInfo().setPosition(Position.MANAGER);
+
+        EmployeeInfo employeeInfo3 = new EmployeeInfo();
+        Cashier cashier = new Cashier(1235, "X", "XXXXXXX", employeeInfo3, 647);
+        cashier.getEmployeeInfo().setSalary(BigDecimal.valueOf(8700));
+        cashier.getEmployeeInfo().setPosition(Position.CASHIER);
+
+        List<Employee> employeeList = List.of(employee, employee2, cashier);
+
+//        Consumer,Supplier interface
+        EmployeeService.changeSalary(employeeList, GeneralUtils.generateRandomValue(employeeList).get());
+
+//        Function interface
+        logger.info("Biggest salary: {}", EmployeeService.getBiggestSalary().apply(employeeList));
+        logger.info("Get field from class that we want: {}", GeneralUtils.transformList(employeeList, employeee -> employeee.getEmployeeInfo().getSalary()));
+
+//        Predicate interface
+        logger.info("Custom filter: {}",
+                GeneralUtils.customFilter(employeeList, employee1 -> employee1.getEmployeeInfo().getSalary().compareTo(BigDecimal.valueOf(5000)) > 0));
+
+
+//        Runnable interface
+        Runnable uploadTask = () -> AdvancedFileUploader.uploadFile("user_photo.png");
+
+        Thread uploadThread = new Thread(uploadTask);
+        uploadThread.start();
+
+        logger.info("User can do other actions");
+        AdvancedFileUploader.performOtherActions();
+    }
+
     private static void handleAddressSetting(AddressInfo addressInfo) {
         try {
             addressInfo.setStreet("Street1");
@@ -449,4 +558,9 @@ public class Main {
 
         return Arrays.asList(book, laptop, foodProduct);
     }
+
+    public static boolean isWeekend(DayOfWeek day) {
+        return day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
+    }
+
 }

@@ -2,6 +2,8 @@ package com.solvd.onlinemarket.service;
 
 
 import com.solvd.onlinemarket.product.Product;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductService {
+
+    private static final Logger logger = LogManager.getLogger(ProductService.class);
 
     public static <T extends Product> BigDecimal countTotalValue(List<T> products) {
         BigDecimal totalValue = BigDecimal.ZERO;
@@ -31,7 +35,7 @@ public class ProductService {
 
         for (Product product : products) {
             if (product == null) {
-                System.err.println("Skip null com.solvd.onlinemarket.product");
+                logger.warn("Skip null com.solvd.onlinemarket.product");
                 continue;
             }
 
@@ -49,7 +53,7 @@ public class ProductService {
 
         for (Product product : products) {
             if (product == null) {
-                System.err.println("Skipping invalid com.solvd.onlinemarket.product");
+                logger.warn("Skipping invalid com.solvd.onlinemarket.product");
                 continue;
             }
 

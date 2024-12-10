@@ -2,22 +2,32 @@ package com.solvd.onlinemarket.product;
 
 
 import com.solvd.onlinemarket.attribute.Size;
+import com.solvd.onlinemarket.enumeration.PriorityType;
 import com.solvd.onlinemarket.info.PricingInfo;
 import com.solvd.onlinemarket.info.ProductBasicInfo;
 import com.solvd.onlinemarket.info.ProductDetailsInfo;
 
 public abstract class Product {
 
-    //    In this program com.solvd.onlinemarket.product cannot change basicInfo
+    //    In this program .product cannot change basicInfo
     private final ProductBasicInfo basicInfo;
     private PricingInfo pricingInfo;
     private Size size;
     private ProductDetailsInfo productDetails;
+    private PriorityType priorityType;
 
     public Product(ProductBasicInfo basicInfo, PricingInfo pricingInfo, Size size) {
         this.basicInfo = basicInfo;
         this.pricingInfo = pricingInfo;
         this.size = size;
+    }
+
+    public PriorityType getPriorityType() {
+        return priorityType;
+    }
+
+    public void setPriorityType(PriorityType priorityType) {
+        this.priorityType = priorityType;
     }
 
     public ProductBasicInfo getBasicInfo() {
