@@ -20,7 +20,6 @@ public class GeneralUtils {
                 .collect(Collectors.toList());
     }
 
-
     public static <T> List<T> customFilter(List<T> list, Predicate<T> transformer) {
         return list.stream()
                 .filter(transformer)
