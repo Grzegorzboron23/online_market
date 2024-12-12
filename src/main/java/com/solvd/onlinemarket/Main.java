@@ -481,6 +481,20 @@ public class Main {
 
         logger.info("User can do other actions");
         AdvancedFileUploader.performOtherActions();
+
+
+        // Using processEmployees to calculate yearly bonuses
+        EmployeeService.processEmployees(employeeList, emp -> {
+            BigDecimal bonus = emp.getEmployeeInfo().getSalary().multiply(BigDecimal.valueOf(0.1));
+            return "Yearly Bonus: " + bonus;
+        });
+
+        // Logging employee names
+        employeeList.forEach(emp -> {
+            String name = emp.getName();
+            logger.info("Employee Name: {}", name);
+        });
+
     }
 
     private static void handleAddressSetting(AddressInfo addressInfo) {

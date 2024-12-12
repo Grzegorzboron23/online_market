@@ -92,7 +92,7 @@ public class EmployeeService {
                 continue;
             }
 
-            String positionName = employee.getEmployeeInfo().getPosition().getPositionName();
+            String positionName = employee.getEmployeeInfo().getPosition().getName();
 //            ArrayList because I add element at the end and iterate throught it in main method
 //            I would use LinkedList if I would delete elements or add elements in the middle of array
             result.computeIfAbsent(positionName, key -> new ArrayList<>()).add(employee);
@@ -141,6 +141,12 @@ public class EmployeeService {
                         .max(BigDecimal::compareTo)
                         .orElse(BigDecimal.ZERO);
 
+    }
+
+    public static <T, R> void processEmployees(List<T> employees, Function<T, R> action) {
+        for (T employee : employees) {
+            R result = action.apply(employee);
+        }
     }
 }
 

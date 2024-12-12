@@ -16,18 +16,18 @@ public enum Planets {
         logger.info("Planets enum initialized with delivery capabilities.");
     }
 
-    private final String planets;
+    private final String name;
 
     Planets(String priorityType) {
-        this.planets = priorityType;
+        this.name = priorityType;
     }
 
-    public String getPlanetName() {
-        return planets;
+    public String getName() {
+        return name;
     }
 
     public String deliverPlanetTime(String productName) {
-        String message = "Delivering " + productName + " to " + this.getPlanetName();
+        String message = "Delivering " + productName + " to " + this.getName();
         logger.info(message);
         switch (this) {
             case MERCURY:
@@ -44,7 +44,7 @@ public enum Planets {
                 break;
             default:
                 logger.error("Unknown planet for delivery!");
-                throw new IllegalArgumentException("Unsupported planet: " + this.getPlanetName());
+                throw new IllegalArgumentException("Unsupported planet: " + this.getName());
         }
         return message;
     }

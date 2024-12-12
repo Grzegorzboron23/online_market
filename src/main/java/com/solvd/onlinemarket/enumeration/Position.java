@@ -6,13 +6,13 @@ public enum Position {
     MANAGER("Manager"),
     CASHIER("Cashier");
 
-    private final String positionName;
+    private final String name;
 
     Position(String positionName) {
-        this.positionName = positionName;
+        this.name = positionName;
     }
 
-    public String getPositionName() {
-        return positionName;
+    public String getName() {
+        return name;
     }
 }
