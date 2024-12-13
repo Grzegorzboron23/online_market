@@ -24,13 +24,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static com.solvd.onlinemarket.utils.StreamUtils.findProductNameByCategory;
 
 
 public class Main {
@@ -73,9 +75,102 @@ public class Main {
 
 //        Main.demonstrateApacheLibraries();
 
-        Main.demonstrateEnums();
-        Main.demonstrateLambdas();
-        Main.demonstrateCustomLambda();
+//        Main.demonstrateEnums();
+//        Main.demonstrateLambdas();
+//        Main.demonstrateCustomLambda();
+        Main.demonstrateStreamAPI();
+        Main.demonstrateReflection();
+        Main.demonstrateCreateObjectUsingReflection();
+    }
+
+    private static void demonstrateCreateObjectUsingReflection() {
+        try {
+            // Load the ProductBasicInfo class dynamically
+            Class<?> productBasicInfoClass = Class.forName("com.solvd.onlinemarket.info.ProductBasicInfo");
+
+            // Create an instance using the default constructor
+            Constructor<?> defaultConstructor = productBasicInfoClass.getConstructor();
+            Object productBasicInfo = defaultConstructor.newInstance();
+
+            // Set the name field
+            Field nameField = productBasicInfoClass.getDeclaredField("name");
+            nameField.setAccessible(true); // Make private field accessible
+            nameField.set(productBasicInfo, "Sample Product");
+
+            // Set the category field
+            Field categoryField = productBasicInfoClass.getDeclaredField("category");
+            categoryField.setAccessible(true);
+            categoryField.set(productBasicInfo, Category.ELECTRONICS);
+
+            // Call the getName method
+            Method getNameMethod = productBasicInfoClass.getMethod("getName");
+            String name = (String) getNameMethod.invoke(productBasicInfo);
+            logger.info("Product Name: {}", name);
+
+            // Call the getCategory method
+            Method getCategoryMethod = productBasicInfoClass.getMethod("getCategory");
+            Category category = (Category) getCategoryMethod.invoke(productBasicInfo);
+            logger.info("Product Category: {}", category);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void demonstrateStreamAPI() {
+        List<Product> products = Main.getProducts();
+        logger.info("Biggest product value: {}", StreamUtils.getBiggestProductValue(products));
+        logger.info("First product with price bigger than 150: {}", StreamUtils.findFirstProductWithPriceBiggerThan(products, new BigDecimal("150")));
+        logger.info("All products with price bigger than 150: {}", StreamUtils.findAllProductsWithPriceBiggerThan(products, new BigDecimal("150")));
+        logger.info("Count of products with price bigger than 150: {}", StreamUtils.countProductsWithPriceBiggerThan(products, new BigDecimal("150")));
+        logger.info("Sorted products by price: {}", StreamUtils.sortProductsByPrice(products));
+        logger.info("Products prices with VAT: {}", StreamUtils.getProductsPriceWithVatTax(products, new BigDecimal("1.23")));
+        logger.info("Any product expensive (>250): {}", StreamUtils.anyExpensive(products, new BigDecimal("250")));
+        logger.info("Price with VAT details: {}", StreamUtils.priceWithVatDetails(products, new BigDecimal("1.23")));
+        logger.info("Processed products: {}", StreamUtils.processedProducts(products));
+
+        logger.info("All prices: ");
+        StreamUtils.showAllPrices(products);
+
+        Optional<String> productName = findProductNameByCategory(products, Category.ELECTRONICS);
+
+
+    }
+
+    private static void demonstrateReflection() {
+        Product product = Main.getProducts().get(0);
+
+        logger.info("Field Names: {}", ReflectionUtils.getFieldNames(product));
+        logger.info("Field Modifiers: {}", ReflectionUtils.getModifiers(product));
+        logger.info("Field Annotations: {}", ReflectionUtils.getAnnotations(product));
+        logger.info("Constructors: {}", ReflectionUtils.getConstructors(product));
+    }
+
+
+    private static List<Product> getProducts() {
+        ProductBasicInfo basicInfo = new ProductBasicInfo("X", Category.ELECTRONICS); // Essential information
+        PricingInfo pricingInfo = new PricingInfo(BigDecimal.valueOf(10), 10); // Essential information
+        Size size = new Size(30f, 20f, 1.5f); // Essential information
+        ProductDetailsInfo productDetailsInfo = new ProductDetailsInfo();
+        productDetailsInfo.setDescription("X");
+        productDetailsInfo.setIsAvailable(true);
+
+        Book book = new Book(basicInfo, pricingInfo, size,
+                "Author Name", 200, "Fiction", "233"); // Essential book details passed via constructor
+        book.setProductDetails(productDetailsInfo); // Optional product details are set via setter
+        book.setPublisher("publisher name"); // Publisher may be assigned later, so it's set via setter
+
+        Laptop laptop = new Laptop(basicInfo, pricingInfo, size,
+                "BrandName", "Intel i7", "Windows 10", 2.0, 5); // Essential laptop details passed via constructor
+        laptop.setProductDetails(productDetailsInfo); // Optional product details set via setter
+
+        FoodProduct foodProduct = new FoodProduct(basicInfo, pricingInfo, size,
+                "OrganicBrand"); // Brand is essential, so passed via constructor
+        foodProduct.setProductDetails(productDetailsInfo); // Optional product details set via setter
+        foodProduct.setIsOrganic(true); // isOrganic is optional, set via setter
+
+        return List.of(book, laptop, foodProduct);
     }
 
     private static void demonstrateCustomLambda() {

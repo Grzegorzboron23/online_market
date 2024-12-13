@@ -35,7 +35,7 @@ public class ProductService {
 
         for (Product product : products) {
             if (product == null) {
-                logger.warn("Skip null com.solvd.onlinemarket.product");
+                logger.warn("Skip null product");
                 continue;
             }
 
@@ -53,7 +53,7 @@ public class ProductService {
 
         for (Product product : products) {
             if (product == null) {
-                logger.warn("Skipping invalid com.solvd.onlinemarket.product");
+                logger.warn("Skipping invalid product");
                 continue;
             }
 
