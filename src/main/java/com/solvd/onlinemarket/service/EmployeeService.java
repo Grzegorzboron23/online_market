@@ -53,13 +53,13 @@ public class EmployeeService {
             if (employee == null
                     || employee.getEmployeeInfo() == null
                     || employee.getEmployeeInfo().getSalary() == null) {
-                System.err.println("Skipping invalid com.solvd.onlinemarket.employee or missing salary information " + employee);
+                logger.error("Skipping invalid employee or missing salary information {}", employee);
                 continue;
             }
 
             if (employee instanceof CEO) {
 //                Will log toString method
-                System.out.println("Skipping CEO: " + employee);
+                logger.warn("Skipping CEO: {}", employee);
                 continue;
             }
 
@@ -88,7 +88,7 @@ public class EmployeeService {
             if (employee == null
                     || employee.getEmployeeInfo() == null
                     || employee.getEmployeeInfo().getPosition() == null) {
-                System.err.println("Skipping invalid com.solvd.onlinemarket.employee  " + employee);
+                System.err.println("Skipping invalid employee  " + employee);
                 continue;
             }
 
@@ -114,9 +114,9 @@ public class EmployeeService {
 
     public static void performDuties(Person person) {
         String emailMessage = generateEmail(person);
-        System.out.println("Email generated for " + person.getName() + ":\n");
-        System.out.println(emailMessage);
-        System.out.println("Completed duties for: " + person.getRoleDescription());
+        logger.info("Email generated for {}:\n", person.getName());
+        logger.info(emailMessage);
+        logger.info("Completed duties for: {}", person.getRoleDescription());
     }
 
     public static void changeSalary(List<Employee> employeeList, double randomValue) {

@@ -1,6 +1,8 @@
 package com.solvd.onlinemarket;
 
 import com.solvd.onlinemarket.attribute.Size;
+import com.solvd.onlinemarket.connection.Connection;
+import com.solvd.onlinemarket.connection.ConnectionPool;
 import com.solvd.onlinemarket.employee.*;
 import com.solvd.onlinemarket.employeeInterface.functionalInterface.CustomLambda;
 import com.solvd.onlinemarket.enumeration.*;
@@ -15,9 +17,7 @@ import com.solvd.onlinemarket.product.Laptop;
 import com.solvd.onlinemarket.product.Product;
 import com.solvd.onlinemarket.productInterface.Spoiled;
 import com.solvd.onlinemarket.profitCalculator.ProductCalculator;
-import com.solvd.onlinemarket.service.BookService;
-import com.solvd.onlinemarket.service.EmployeeService;
-import com.solvd.onlinemarket.service.ProductService;
+import com.solvd.onlinemarket.service.*;
 import com.solvd.onlinemarket.utils.*;
 import com.solvd.onlinemarket.warehouse.Warehouse;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +31,10 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static com.solvd.onlinemarket.utils.StreamUtils.findProductNameByCategory;
 
@@ -78,15 +82,99 @@ public class Main {
 //        Main.demonstrateEnums();
 //        Main.demonstrateLambdas();
 //        Main.demonstrateCustomLambda();
-        Main.demonstrateStreamAPI();
-        Main.demonstrateReflection();
-        Main.demonstrateCreateObjectUsingReflection();
+//        Main.demonstrateStreamAPI();
+//        Main.demonstrateReflection();
+//        Main.demonstrateCreateObjectUsingReflection();
+        Main.demonstrateThreads();
+        Main.demonstrateCompletableFuture();
+        Main.demonstrateConnectionPool();
+    }
+
+
+    public static void demonstrateThreads() {
+
+
+        // Runnable-based thread for cashiers
+        Thread cashierThread = new Thread(new EmailServiceRunnable(fillPersonArray(), "Cashier"));
+        cashierThread.start();
+
+        // Thread-based class for other users
+        EmailServiceThread traineeEmployeeThread = new EmailServiceThread(fillPersonArray(), "Trainee/Employee");
+        traineeEmployeeThread.start();
+
+        // Wait for both threads to finish
+        try {
+            cashierThread.join();
+            traineeEmployeeThread.join();
+        } catch (InterruptedException e) {
+            logger.error("Thread was interrupted: {}", e.getMessage());
+        }
+
+        logger.info("\nAll emails have been sent successfully.");
+    }
+
+    public static void demonstrateCompletableFuture() {
+        EmployeeInfo employeeInfo = new EmployeeInfo();
+        Employee employee = new Employee(123, "X", "XX", employeeInfo);
+        employee.getEmployeeInfo().setSalary(BigDecimal.valueOf(36500));
+        employee.getEmployeeInfo().setPosition(Position.CASHIER);
+
+        EmployeeInfo employeeInfo2 = new EmployeeInfo();
+        Employee employee2 = new Employee(1237, "X", "XXXX", employeeInfo2);
+        employee2.getEmployeeInfo().setSalary(BigDecimal.valueOf(38500));
+        employee2.getEmployeeInfo().setPosition(Position.MANAGER);
+
+        EmployeeInfo employeeInfo3 = new EmployeeInfo();
+        Cashier cashier = new Cashier(1235, "X", "XXXXXXX", employeeInfo3, 647);
+        cashier.getEmployeeInfo().setSalary(BigDecimal.valueOf(8700));
+        cashier.getEmployeeInfo().setPosition(Position.CASHIER);
+
+        CompletableFuture<BigDecimal> decreasePays = CompletableFuture.supplyAsync(() -> {
+            return EmployeeService.decreasePaidForEmployeesAndCalculateSavings(Set.of(employee, cashier), 10);
+        });
+
+        try {
+            logger.info("Calculate savings  in different thread {}", decreasePays.get());
+        } catch (Exception e) {
+            logger.error("Error decreasePays method", e);
+        }
+    }
+
+    public static void demonstrateConnectionPool() {
+        final int POOL_SIZE = 5;
+        final int THREAD_COUNT = 7;
+
+        ConnectionPool connectionPool = new ConnectionPool(POOL_SIZE);
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+
+        Runnable task = () -> {
+            try {
+                Connection connection = connectionPool.acquire();
+                Thread.sleep(2000);
+                connectionPool.release(connection);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        };
+
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            executorService.submit(task);
+        }
+
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        logger.info("All tasks completed.");
     }
 
     private static void demonstrateCreateObjectUsingReflection() {
         try {
             // Load the ProductBasicInfo class dynamically
-            Class<?> productBasicInfoClass = Class.forName("com.solvd.onlinemarket.info.ProductBasicInfo");
+            Class<?> productBasicInfoClass = Class.forName("ProductBasicInfo");
 
             // Create an instance using the default constructor
             Constructor<?> defaultConstructor = productBasicInfoClass.getConstructor();
@@ -134,8 +222,6 @@ public class Main {
         StreamUtils.showAllPrices(products);
 
         Optional<String> productName = findProductNameByCategory(products, Category.ELECTRONICS);
-
-
     }
 
     private static void demonstrateReflection() {
@@ -203,6 +289,33 @@ public class Main {
 
 
     public static List<Employee> fillEmployeeArray() {
+        EmployeeInfo employeeInfo = new EmployeeInfo(BigDecimal.valueOf(1000), LocalDate.now(), Position.CEO);
+
+        // Setting addressInfo via setters as it is optional for Employee creation
+        AddressInfo addressInfo = new AddressInfo();
+
+        try {
+            addressInfo.setCountry("Po");
+            addressInfo.setCity("Wroclaw");
+            addressInfo.setStreet("Opolska");
+        } catch (InvalidAddressException e) {
+            logger.error("Error ", e);
+        }
+
+        CEO ceo = new CEO(123456789, "X", "XX", employeeInfo); // employeeInfo is essential for CEO creation, so it's in the constructor
+        ceo.setAddressInfo(addressInfo); // addressInfo is optional, so it's set through a setter
+
+        Manager manager = new Manager(123456789, "X", "XX", employeeInfo); // employeeInfo is essential, so it's in the constructor
+        manager.setAddressInfo(addressInfo); // Optional addressInfo is set through a setter
+        manager.setTeamSize(10); // teamSize can vary, so it's set via a setter
+
+        Cashier cashier = new Cashier(123456789, "X", "XX", employeeInfo, 16); // employeeInfo is essential, passed through the constructor
+        cashier.setAddressInfo(addressInfo); // Optional addressInfo is set through a setter
+
+        return Arrays.asList(ceo, manager, cashier);
+    }
+
+    public static List<Person> fillPersonArray() {
         EmployeeInfo employeeInfo = new EmployeeInfo(BigDecimal.valueOf(1000), LocalDate.now(), Position.CEO);
 
         // Setting addressInfo via setters as it is optional for Employee creation
