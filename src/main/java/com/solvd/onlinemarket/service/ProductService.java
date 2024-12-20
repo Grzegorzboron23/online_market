@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ProductService {
 
-    private static final Logger logger = LogManager.getLogger(ProductService.class);
+    private static final Logger LOGGER = LogManager.getLogger(ProductService.class);
 
     public static <T extends Product> BigDecimal countTotalValue(List<T> products) {
         BigDecimal totalValue = BigDecimal.ZERO;
@@ -35,7 +35,7 @@ public class ProductService {
 
         for (Product product : products) {
             if (product == null) {
-                logger.warn("Skip null product");
+                LOGGER.warn("Skip null product");
                 continue;
             }
 
@@ -53,7 +53,7 @@ public class ProductService {
 
         for (Product product : products) {
             if (product == null) {
-                logger.warn("Skipping invalid product");
+                LOGGER.warn("Skipping invalid product");
                 continue;
             }
 

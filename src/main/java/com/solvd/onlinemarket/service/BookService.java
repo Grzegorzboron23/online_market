@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class BookService {
 
-    private static final Logger logger = LogManager.getLogger(BookService.class);
+    private static final Logger LOGGER = LogManager.getLogger(BookService.class);
 
     public static int countWordsInBook(String inputFilePath, String outputFilePath) {
         try {
@@ -27,7 +27,7 @@ public class BookService {
             BookUtils.saveToFile(outputFilePath, "Number of unique words: " + uniqueWordCount);
             return uniqueWordCount;
         } catch (IOException e) {
-            logger.error("Error processing the book file ", e);
+            LOGGER.error("Error processing the book file ", e);
             return -1;
         }
     }

@@ -9,7 +9,7 @@ import java.util.List;
 public class EmailServiceRunnable implements Runnable {
 
 
-    private static final Logger logger = LogManager.getLogger(EmailServiceRunnable.class);
+    private static final Logger LOGGER = LogManager.getLogger(EmailServiceRunnable.class);
     private final List<Person> people;
     private final String userType;
 
@@ -22,7 +22,7 @@ public class EmailServiceRunnable implements Runnable {
     public void run() {
         for (Person person : people) {
             String email = EmployeeService.generateEmail(person);
-            logger.info("Sending email to {}:\n{}", userType, email);
+            LOGGER.info("Sending email to {}:\n{}", userType, email);
         }
     }
 

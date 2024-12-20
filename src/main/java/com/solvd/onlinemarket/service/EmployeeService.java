@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 public class EmployeeService {
 
-    private static final Logger logger = LogManager.getLogger(EmployeeService.class);
+    private static final Logger LOGGER = LogManager.getLogger(EmployeeService.class);
 
     public static String generateEmail(Person person) {
         StringBuilder emailMessage = new StringBuilder();
@@ -53,13 +53,13 @@ public class EmployeeService {
             if (employee == null
                     || employee.getEmployeeInfo() == null
                     || employee.getEmployeeInfo().getSalary() == null) {
-                logger.error("Skipping invalid employee or missing salary information {}", employee);
+                LOGGER.error("Skipping invalid employee or missing salary information {}", employee);
                 continue;
             }
 
             if (employee instanceof CEO) {
 //                Will log toString method
-                logger.warn("Skipping CEO: {}", employee);
+                LOGGER.warn("Skipping CEO: {}", employee);
                 continue;
             }
 
@@ -114,9 +114,9 @@ public class EmployeeService {
 
     public static void performDuties(Person person) {
         String emailMessage = generateEmail(person);
-        logger.info("Email generated for {}:\n", person.getName());
-        logger.info(emailMessage);
-        logger.info("Completed duties for: {}", person.getRoleDescription());
+        LOGGER.info("Email generated for {}:\n", person.getName());
+        LOGGER.info(emailMessage);
+        LOGGER.info("Completed duties for: {}", person.getRoleDescription());
     }
 
     public static void changeSalary(List<Employee> employeeList, double randomValue) {
@@ -128,7 +128,7 @@ public class EmployeeService {
 
         Consumer<List<Employee>> logSalaries = employees ->
                 employees.forEach(employee ->
-                        logger.info("Employee name and salary: {} - {}",
+                        LOGGER.info("Employee name and salary: {} - {}",
                                 employee.getName(), employee.getEmployeeInfo().getSalary()));
 
         logSalaries.andThen(raiseSalary).andThen(logSalaries).accept(employeeList);

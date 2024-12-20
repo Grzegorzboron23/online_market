@@ -41,11 +41,11 @@ import static com.solvd.onlinemarket.utils.StreamUtils.findProductNameByCategory
 
 public class Main {
 
-    private static final Logger logger = LogManager.getLogger(Main.class);
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
 
     public static void main(String[] args) {
-        logger.debug("Start program");
+        LOGGER.debug("Start program");
 
 //        List<Product> productList = Main.fillProductArray();
 //        List<Employee> employeeList = Main.fillEmployeeArray();
@@ -56,10 +56,10 @@ public class Main {
 //        onlineMarket.setEmployees(employeeList);
         // Setter used as employee list may be modified later
 
-//        logger.info("Products: {}", onlineMarket.getProducts());
-//        logger.info("Employees: {}", onlineMarket.getEmployees());
+//        LOGGER.info("Products: {}", onlineMarket.getProducts());
+//        LOGGER.info("Employees: {}", onlineMarket.getEmployees());
 
-//        logger.info("Value of products: {}", ProductService.countTotalValue(onlineMarket.getProducts()));
+//        LOGGER.info("Value of products: {}", ProductService.countTotalValue(onlineMarket.getProducts()));
 
 //        Main.demonstrateObjectMethodOverrides();
 //        Main.demonstrateFinalStaticAndInterface();
@@ -68,7 +68,7 @@ public class Main {
 //        try {
 //            demonstrateExceptions();
 //        } catch (RuntimeException e) {
-//            logger.error("Critical error : ", e.getMessage());
+//            LOGGER.error("Critical error : ", e.getMessage());
 //            e.printStackTrace();
 //            System.exit(1);
 //        }
@@ -107,10 +107,10 @@ public class Main {
             cashierThread.join();
             traineeEmployeeThread.join();
         } catch (InterruptedException e) {
-            logger.error("Thread was interrupted: {}", e.getMessage());
+            LOGGER.error("Thread was interrupted: {}", e.getMessage());
         }
 
-        logger.info("\nAll emails have been sent successfully.");
+        LOGGER.info("\nAll emails have been sent successfully.");
     }
 
     public static void demonstrateCompletableFuture() {
@@ -134,9 +134,9 @@ public class Main {
         });
 
         try {
-            logger.info("Calculate savings  in different thread {}", decreasePays.get());
+            LOGGER.info("Calculate savings  in different thread {}", decreasePays.get());
         } catch (Exception e) {
-            logger.error("Error decreasePays method", e);
+            LOGGER.error("Error decreasePays method", e);
         }
     }
 
@@ -150,7 +150,9 @@ public class Main {
         Runnable task = () -> {
             try {
                 Connection connection = connectionPool.acquire();
-                Thread.sleep(2000);
+                // Perform action with the connection
+                String connectionName = connection.getName();
+                LOGGER.info("{} using {}", Thread.currentThread().getName(), connectionName);
                 connectionPool.release(connection);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -165,10 +167,10 @@ public class Main {
         try {
             executorService.awaitTermination(1, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
-        logger.info("All tasks completed.");
+        LOGGER.info("All tasks completed.");
     }
 
     private static void demonstrateCreateObjectUsingReflection() {
@@ -193,12 +195,12 @@ public class Main {
             // Call the getName method
             Method getNameMethod = productBasicInfoClass.getMethod("getName");
             String name = (String) getNameMethod.invoke(productBasicInfo);
-            logger.info("Product Name: {}", name);
+            LOGGER.info("Product Name: {}", name);
 
             // Call the getCategory method
             Method getCategoryMethod = productBasicInfoClass.getMethod("getCategory");
             Category category = (Category) getCategoryMethod.invoke(productBasicInfo);
-            logger.info("Product Category: {}", category);
+            LOGGER.info("Product Category: {}", category);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,17 +210,17 @@ public class Main {
 
     private static void demonstrateStreamAPI() {
         List<Product> products = Main.getProducts();
-        logger.info("Biggest product value: {}", StreamUtils.getBiggestProductValue(products));
-        logger.info("First product with price bigger than 150: {}", StreamUtils.findFirstProductWithPriceBiggerThan(products, new BigDecimal("150")));
-        logger.info("All products with price bigger than 150: {}", StreamUtils.findAllProductsWithPriceBiggerThan(products, new BigDecimal("150")));
-        logger.info("Count of products with price bigger than 150: {}", StreamUtils.countProductsWithPriceBiggerThan(products, new BigDecimal("150")));
-        logger.info("Sorted products by price: {}", StreamUtils.sortProductsByPrice(products));
-        logger.info("Products prices with VAT: {}", StreamUtils.getProductsPriceWithVatTax(products, new BigDecimal("1.23")));
-        logger.info("Any product expensive (>250): {}", StreamUtils.anyExpensive(products, new BigDecimal("250")));
-        logger.info("Price with VAT details: {}", StreamUtils.priceWithVatDetails(products, new BigDecimal("1.23")));
-        logger.info("Processed products: {}", StreamUtils.processedProducts(products));
+        LOGGER.info("Biggest product value: {}", StreamUtils.getBiggestProductValue(products));
+        LOGGER.info("First product with price bigger than 150: {}", StreamUtils.findFirstProductWithPriceBiggerThan(products, new BigDecimal("150")));
+        LOGGER.info("All products with price bigger than 150: {}", StreamUtils.findAllProductsWithPriceBiggerThan(products, new BigDecimal("150")));
+        LOGGER.info("Count of products with price bigger than 150: {}", StreamUtils.countProductsWithPriceBiggerThan(products, new BigDecimal("150")));
+        LOGGER.info("Sorted products by price: {}", StreamUtils.sortProductsByPrice(products));
+        LOGGER.info("Products prices with VAT: {}", StreamUtils.getProductsPriceWithVatTax(products, new BigDecimal("1.23")));
+        LOGGER.info("Any product expensive (>250): {}", StreamUtils.anyExpensive(products, new BigDecimal("250")));
+        LOGGER.info("Price with VAT details: {}", StreamUtils.priceWithVatDetails(products, new BigDecimal("1.23")));
+        LOGGER.info("Processed products: {}", StreamUtils.processedProducts(products));
 
-        logger.info("All prices: ");
+        LOGGER.info("All prices: ");
         StreamUtils.showAllPrices(products);
 
         Optional<String> productName = findProductNameByCategory(products, Category.ELECTRONICS);
@@ -227,10 +229,10 @@ public class Main {
     private static void demonstrateReflection() {
         Product product = Main.getProducts().get(0);
 
-        logger.info("Field Names: {}", ReflectionUtils.getFieldNames(product));
-        logger.info("Field Modifiers: {}", ReflectionUtils.getModifiers(product));
-        logger.info("Field Annotations: {}", ReflectionUtils.getAnnotations(product));
-        logger.info("Constructors: {}", ReflectionUtils.getConstructors(product));
+        LOGGER.info("Field Names: {}", ReflectionUtils.getFieldNames(product));
+        LOGGER.info("Field Modifiers: {}", ReflectionUtils.getModifiers(product));
+        LOGGER.info("Field Annotations: {}", ReflectionUtils.getAnnotations(product));
+        LOGGER.info("Constructors: {}", ReflectionUtils.getConstructors(product));
     }
 
 
@@ -267,10 +269,10 @@ public class Main {
         CustomLambda<Integer, Integer> lengthOfStringifiedNumber =
                 intToString.andThen(stringLength);
 
-        logger.info(intToString.apply(10)); // "Number: 10"
-        logger.info(stringLength.apply("Hello World")); // 11
-        logger.info(square.apply(5)); // 25
-        logger.info(lengthOfStringifiedNumber.apply(10)); // 9
+        LOGGER.info(intToString.apply(10)); // "Number: 10"
+        LOGGER.info(stringLength.apply("Hello World")); // 11
+        LOGGER.info(square.apply(5)); // 25
+        LOGGER.info(lengthOfStringifiedNumber.apply(10)); // 9
     }
 
     private static void demonstrateApacheLibraries() {
@@ -281,7 +283,7 @@ public class Main {
             String outputFilePath = "src/main/resources/output.txt";
             int uniqueWordCount = BookService.countWordsInBook(inputFilePath, outputFilePath);
 
-            logger.info("Number of unique words: {}", uniqueWordCount);
+            LOGGER.info("Number of unique words: {}", uniqueWordCount);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,7 +301,7 @@ public class Main {
             addressInfo.setCity("Wroclaw");
             addressInfo.setStreet("Opolska");
         } catch (InvalidAddressException e) {
-            logger.error("Error ", e);
+            LOGGER.error("Error ", e);
         }
 
         CEO ceo = new CEO(123456789, "X", "XX", employeeInfo); // employeeInfo is essential for CEO creation, so it's in the constructor
@@ -326,7 +328,7 @@ public class Main {
             addressInfo.setCity("Wroclaw");
             addressInfo.setStreet("Opolska");
         } catch (InvalidAddressException e) {
-            logger.error("Error ", e);
+            LOGGER.error("Error ", e);
         }
 
         CEO ceo = new CEO(123456789, "X", "XX", employeeInfo); // employeeInfo is essential for CEO creation, so it's in the constructor
@@ -377,34 +379,34 @@ public class Main {
         Cashier cashier = new Cashier(1235, "X", "XX", employeeInfo, 647);
 
 //        toString method
-        logger.info("To string methods");
-        logger.info(employee); //toString result Person ... and default toString in employeeInfo like info.EmployeeInfo@...
-        logger.info(cashier);
-        logger.info(person);
+        LOGGER.info("To string methods");
+        LOGGER.info(employee); //toString result Person ... and default toString in employeeInfo like info.EmployeeInfo@...
+        LOGGER.info(cashier);
+        LOGGER.info(person);
 
 //        equalsMethod
-        logger.info("Equals methods:");
-        logger.info(employee.equals(person)); //true because it compares only by id not by memory
-        logger.info(employee.equals(cashier)); //false because id is different
+        LOGGER.info("Equals methods:");
+        LOGGER.info(employee.equals(person)); //true because it compares only by id not by memory
+        LOGGER.info(employee.equals(cashier)); //false because id is different
 
         // hashCode method
-        logger.info("hashCode output:");
-        logger.info("employee.hashCode(): {}", employee.hashCode());
-        logger.info("person.hashCode(): {}", person.hashCode());
+        LOGGER.info("hashCode output:");
+        LOGGER.info("employee.hashCode(): {}", employee.hashCode());
+        LOGGER.info("person.hashCode(): {}", person.hashCode());
         //person and .employee has the same hashcode because equals compares only they id's
-        logger.info("cashier.hashCode(): {}", cashier.hashCode());
+        LOGGER.info("cashier.hashCode(): {}", cashier.hashCode());
 //        different because of id
 
 
 //        abstract method getRoleDescription
-        logger.info("Abstract method:");
-        logger.info(person.getRoleDescription()); //using getRoleDescription from employee because it's instantion of employee
-        logger.info(employee.getRoleDescription());
-        logger.info(cashier.getRoleDescription());  //using getRoleDescription from employee + adding more responsibilities
-        logger.info(person2.getRoleDescription());  //using getRoleDescription from trainee
+        LOGGER.info("Abstract method:");
+        LOGGER.info(person.getRoleDescription()); //using getRoleDescription from employee because it's instantion of employee
+        LOGGER.info(employee.getRoleDescription());
+        LOGGER.info(cashier.getRoleDescription());  //using getRoleDescription from employee + adding more responsibilities
+        LOGGER.info(person2.getRoleDescription());  //using getRoleDescription from trainee
 
 //        Business method
-        logger.info("Business method:");
+        LOGGER.info("Business method:");
         EmployeeService.performDuties(person);
         EmployeeService.performDuties(person2);
         EmployeeService.performDuties(employee);
@@ -412,14 +414,14 @@ public class Main {
 
 
 //       field of superclass
-        logger.info("Super class field");
+        LOGGER.info("Super class field");
         cashier.setSupervisor(person);
-        logger.info("Supervisor of manager (generalEmployee): {}", cashier.getSupervisorDescription()); //get responsibilities from employee
+        LOGGER.info("Supervisor of manager (generalEmployee): {}", cashier.getSupervisorDescription()); //get responsibilities from employee
 
         cashier.setSupervisor(person2);
-        logger.info("Supervisor of manager (seniorManager): {}", cashier.getSupervisorDescription()); //get responsibilities from trainee
+        LOGGER.info("Supervisor of manager (seniorManager): {}", cashier.getSupervisorDescription()); //get responsibilities from trainee
 
-        logger.info("Protected keyword");
+        LOGGER.info("Protected keyword");
         employee.showHowProtectedKeywordWorks(); //instead of using getId() I can use direct id field
     }
 
@@ -449,29 +451,29 @@ public class Main {
 
 
 //        Static and final keyword
-        logger.info("Product calculator ");
-        logger.info("Calculate Profit {}", ProductCalculator.calculateProfit(
+        LOGGER.info("Product calculator ");
+        LOGGER.info("Calculate Profit {}", ProductCalculator.calculateProfit(
                 laptop.getPricingInfo().getPrice(),
                 Laptop.getProductionCost()));
-        logger.info("Get available discount {}", ProductCalculator.getAvailableDiscount());
+        LOGGER.info("Get available discount {}", ProductCalculator.getAvailableDiscount());
 
-        logger.info("Final method");
-        logger.info("Calculate Surface Area {}", laptop.calculateSurfaceArea());
+        LOGGER.info("Final method");
+        LOGGER.info("Calculate Surface Area {}", laptop.calculateSurfaceArea());
 
 //        Interfaces
-        logger.info("ISBN number {}", book.isValidISBN());
-        logger.info("ISBN number {}", book.getISBN());
+        LOGGER.info("ISBN number {}", book.isValidISBN());
+        LOGGER.info("ISBN number {}", book.getISBN());
 
-        logger.info("Interface check method laptop lightweight{}", laptop.isLightweight());
+        LOGGER.info("Interface check method laptop lightweight{}", laptop.isLightweight());
 
-        logger.info("Inteface as field in class");
+        LOGGER.info("Inteface as field in class");
         Warehouse warehouse = new Warehouse(foodProduct);
         warehouse.checkProductStatus();
 
-        logger.info("Inteface as parameter in method ");
+        LOGGER.info("Inteface as parameter in method ");
         checkSpoilage(foodProduct);
 
-        logger.info("Collection ");
+        LOGGER.info("Collection ");
         checkAllSpoiled(List.of(foodProduct));
 
     }
@@ -487,7 +489,7 @@ public class Main {
         try {
             employeeInfo.setSalary(BigDecimal.valueOf(-1L));
         } catch (InvalidSalaryException e) {
-            logger.warn("Error while setting salary: ", e);
+            LOGGER.warn("Error while setting salary: ", e);
         }
 
 
@@ -497,7 +499,7 @@ public class Main {
             // don't need to be surrounded by try catch block
             size.setHeight(-10f);
         } catch (IllegalArgumentException e) {
-            logger.warn("Error while setting height: ", e);
+            LOGGER.warn("Error while setting height: ", e);
         }
 
         try {
@@ -505,7 +507,7 @@ public class Main {
             // don't need to be surrounded by try catch block
             Cashier cashier = new Cashier(-123, "X", "XX", employeeInfo, 647);
         } catch (IllegalArgumentException e) {
-            logger.error("Error while creating cashier: ", e);
+            LOGGER.error("Error while creating cashier: ", e);
             throw new RuntimeException("Critical error by creating cashier", e);
         }
     }
@@ -526,27 +528,27 @@ public class Main {
         cashier.getEmployeeInfo().setSalary(BigDecimal.valueOf(8700));
         cashier.getEmployeeInfo().setPosition(Position.CASHIER);
 
-        logger.info("EmployeeService Set");
-        logger.info("Savings {}", EmployeeService.decreasePaidForEmployeesAndCalculateSavings(
+        LOGGER.info("EmployeeService Set");
+        LOGGER.info("Savings {}", EmployeeService.decreasePaidForEmployeesAndCalculateSavings(
                 Set.of(employee, cashier), 5));
 
-        logger.info("Product Service List");
-        logger.info("Needed space {}", ProductService.countTotalSpaceForProductsInWareHouse(Main.setProductList()));
+        LOGGER.info("Product Service List");
+        LOGGER.info("Needed space {}", ProductService.countTotalSpaceForProductsInWareHouse(Main.setProductList()));
 
-        logger.info("HashMap");
-        logger.info("Group employees");
+        LOGGER.info("HashMap");
+        LOGGER.info("Group employees");
         Map<String, List<Employee>> mapOfGroupedEmployees = EmployeeService.groupEmployeesByPosition(List.of(employee, employee2, cashier));
 
         for (String position : mapOfGroupedEmployees.keySet()) {
-            logger.info("Position {} {}", position, mapOfGroupedEmployees.get(position));
+            LOGGER.info("Position {} {}", position, mapOfGroupedEmployees.get(position));
         }
 
-        logger.info("Most paid employee {}", EmployeeService.findMostPaidEmployee(Set.of(employee, employee2, cashier)));
+        LOGGER.info("Most paid employee {}", EmployeeService.findMostPaidEmployee(Set.of(employee, employee2, cashier)));
 
-        logger.info("Product Categories by Size:");
+        LOGGER.info("Product Categories by Size:");
         Map<String, List<Product>> productCategories = ProductService.categorizeProductsBySize(Main.setProductList());
         for (Map.Entry<String, List<Product>> entry : productCategories.entrySet()) {
-            logger.info("Category: {} - Products: {}", entry.getKey(), entry.getValue());
+            LOGGER.info("Category: {} - Products: {}", entry.getKey(), entry.getValue());
         }
     }
 
@@ -572,30 +574,30 @@ public class Main {
         customLinkedList.add(employee2);
 
 
-        logger.info("First employee {}", customLinkedList.get(0));
+        LOGGER.info("First employee {}", customLinkedList.get(0));
 
 //Add element to specified index
         customLinkedList.add(0, cashier);
-        logger.info("First employee {}", customLinkedList.get(0));
+        LOGGER.info("First employee {}", customLinkedList.get(0));
 
 //        Remove element
         customLinkedList.remove(cashier);
-        logger.info("First employee after remove {}", customLinkedList.get(0));
+        LOGGER.info("First employee after remove {}", customLinkedList.get(0));
         customLinkedList.add(0, cashier);
 
 
-        logger.info("Does list contains 'Cashier'? {}", customLinkedList.contains(cashier));
+        LOGGER.info("Does list contains 'Cashier'? {}", customLinkedList.contains(cashier));
 
         // Get index element
-        logger.info("'Cashier' index : {}", customLinkedList.indexOf(cashier));
+        LOGGER.info("'Cashier' index : {}", customLinkedList.indexOf(cashier));
 
 //        foreach loop
         for (Employee employee3 : customLinkedList) {
-            logger.info("Employee in loop {}", employee3.getName());
+            LOGGER.info("Employee in loop {}", employee3.getName());
         }
 
         customLinkedList.clear();
-        logger.info("After clear : {}", customLinkedList.indexOf(cashier));
+        LOGGER.info("After clear : {}", customLinkedList.indexOf(cashier));
 
     }
 
@@ -618,36 +620,36 @@ public class Main {
 
 
         book.setPriorityType(PriorityType.HIGH);
-        logger.info("Message to supplier{} ", book.getPriorityType().messageToSupplier());
+        LOGGER.info("Message to supplier{} ", book.getPriorityType().messageToSupplier());
 
         switch (book.getPriorityType()) {
-            case LOW -> logger.info("Low priority 5 days to go..");
-            case MEDIUM -> logger.info("Medium priority 2 days to go ...");
-            case HIGH -> logger.warn("High priority send it immediately");
+            case LOW -> LOGGER.info("Low priority 5 days to go..");
+            case MEDIUM -> LOGGER.info("Medium priority 2 days to go ...");
+            case HIGH -> LOGGER.warn("High priority send it immediately");
             default -> {
-                logger.error("Unknown priority type");
+                LOGGER.error("Unknown priority type");
                 throw new InvalidArgumentException("Unknown priority type");
             }
         }
 
-        logger.info("Planet delivery info " + Planets.EARTH.deliverPlanetTime(book.getBasicInfo().getName()));
+        LOGGER.info("Planet delivery info " + Planets.EARTH.deliverPlanetTime(book.getBasicInfo().getName()));
 
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         switch (paymentMethod) {
-            case CASH -> logger.info("You selected CASH. Please have the exact amount ready.");
-            case CREDIT_CARD -> logger.info("You selected CREDIT CARD. Processing your payment...");
-            case DEBIT_CARD -> logger.info("You selected DEBIT CARD. Processing your payment...");
-            case PAYPAL -> logger.info("You selected PAYPAL. Redirecting to PayPal...");
-            default -> logger.info("Unknown payment method.");
+            case CASH -> LOGGER.info("You selected CASH. Please have the exact amount ready.");
+            case CREDIT_CARD -> LOGGER.info("You selected CREDIT CARD. Processing your payment...");
+            case DEBIT_CARD -> LOGGER.info("You selected DEBIT CARD. Processing your payment...");
+            case PAYPAL -> LOGGER.info("You selected PAYPAL. Redirecting to PayPal...");
+            default -> LOGGER.info("Unknown payment method.");
         }
 
         DayOfWeek today = DayOfWeek.SATURDAY;
 
         if (isWeekend(today)) {
-            logger.info("It's the weekend! Time to relax.");
+            LOGGER.info("It's the weekend! Time to relax.");
         } else {
-            logger.info("It's a weekday. Back to work!");
+            LOGGER.info("It's a weekday. Back to work!");
         }
     }
 
@@ -673,11 +675,11 @@ public class Main {
         EmployeeService.changeSalary(employeeList, GeneralUtils.generateRandomValue(employeeList).get());
 
 //        Function interface
-        logger.info("Biggest salary: {}", EmployeeService.getBiggestSalary().apply(employeeList));
-        logger.info("Get field from class that we want: {}", GeneralUtils.transformList(employeeList, employeee -> employeee.getEmployeeInfo().getSalary()));
+        LOGGER.info("Biggest salary: {}", EmployeeService.getBiggestSalary().apply(employeeList));
+        LOGGER.info("Get field from class that we want: {}", GeneralUtils.transformList(employeeList, employeee -> employeee.getEmployeeInfo().getSalary()));
 
 //        Predicate interface
-        logger.info("Custom filter: {}",
+        LOGGER.info("Custom filter: {}",
                 GeneralUtils.customFilter(employeeList, employee1 -> employee1.getEmployeeInfo().getSalary().compareTo(BigDecimal.valueOf(5000)) > 0));
 
 
@@ -687,7 +689,7 @@ public class Main {
         Thread uploadThread = new Thread(uploadTask);
         uploadThread.start();
 
-        logger.info("User can do other actions");
+        LOGGER.info("User can do other actions");
         AdvancedFileUploader.performOtherActions();
 
 
@@ -700,7 +702,7 @@ public class Main {
         // Logging employee names
         employeeList.forEach(emp -> {
             String name = emp.getName();
-            logger.info("Employee Name: {}", name);
+            LOGGER.info("Employee Name: {}", name);
         });
 
     }
@@ -711,7 +713,7 @@ public class Main {
             addressInfo.setCountry("P"); // This will throw an exception
             addressInfo.setCity("Wroclaw");
         } catch (InvalidAddressException e) {
-            logger.error("Error while setting address in helper method", e);
+            LOGGER.error("Error while setting address in helper method", e);
         }
     }
 
@@ -722,33 +724,33 @@ public class Main {
             List<String> fileContents = FileReadWithResourcesUtil.getResourcesFromFile(filePath);
             fileContents.forEach(System.out::println);
         } catch (FileProcessingException e) {
-            logger.error("An error occurred:", e);
+            LOGGER.error("An error occurred:", e);
         }
 
         try {
             List<String> fileContents = FileReadUtil.getResourcesFromFile(filePath);
             fileContents.forEach(System.out::println);
         } catch (FileProcessingException e) {
-            logger.error("An error occurred: ", e);
+            LOGGER.error("An error occurred: ", e);
         }
 
     }
 
     public static void checkSpoilage(Spoiled item) {
         if (item.isSpoiled()) {
-            logger.warn("The product is spoiled");
+            LOGGER.warn("The product is spoiled");
         } else {
-            logger.info("The product is still good.");
+            LOGGER.info("The product is still good.");
         }
     }
 
     public static void checkAllSpoiled(List<Spoiled> items) {
         for (Spoiled item : items) {
-            logger.info("Checking product...");
+            LOGGER.info("Checking product...");
             if (item.isSpoiled()) {
-                logger.warn("The product is spoiled.");
+                LOGGER.warn("The product is spoiled.");
             } else {
-                logger.info("The product is in good condition.");
+                LOGGER.info("The product is in good condition.");
             }
         }
     }

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EmailServiceThread extends Thread {
 
-    private static final Logger logger = LogManager.getLogger(EmailServiceThread.class);
+    private static final Logger LOGGER = LogManager.getLogger(EmailServiceThread.class);
     private final List<Person> people;
     private final String userType;
 
@@ -21,7 +21,7 @@ public class EmailServiceThread extends Thread {
     public void run() {
         for (Person person : people) {
             String email = EmployeeService.generateEmail(person);
-            logger.info("Sending email to {}:\n{}", userType, email);
+            LOGGER.info("Sending email to {}:\n{}", userType, email);
         }
     }
 }

@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class StreamUtils {
 
-    private static final Logger logger = LogManager.getLogger(StreamUtils.class);
+    private static final Logger LOGGER = LogManager.getLogger(StreamUtils.class);
 
 
     private static boolean isValidProduct(Product product) {
@@ -93,9 +93,9 @@ public class StreamUtils {
     public static List<Product> processedProducts(List<Product> products) {
         return products.stream()
                 .filter(StreamUtils::isValidProduct)
-                .peek(product -> logger.info("Filtered product: {}", product.getBasicInfo().getName()))
+                .peek(product -> LOGGER.info("Filtered product: {}", product.getBasicInfo().getName()))
                 .sorted(Comparator.comparing(product -> product.getPricingInfo().getPrice()))
-                .peek(product -> logger.info("Sorted product: {}", product.getBasicInfo().getName()))
+                .peek(product -> LOGGER.info("Sorted product: {}", product.getBasicInfo().getName()))
                 .collect(Collectors.toList());
     }
 

@@ -9,6 +9,12 @@ public class Connection {
     }
 
     public String getName() {
+        try {
+            // Simulate delay for database query
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         return "Connection-" + id;
     }
 }

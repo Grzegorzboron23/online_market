@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 public class ReflectionUtils {
 
-    private static final Logger logger = LogManager.getLogger(ReflectionUtils.class);
+    private static final Logger LOGGER = LogManager.getLogger(ReflectionUtils.class);
 
     public static Field[] retrieveFieldsFromClass(Object object) {
         if (object == null) {
-            logger.error("Object cannot be null retrieveFieldsFromClass ");
+            LOGGER.error("Object cannot be null retrieveFieldsFromClass ");
             throw new InvalidValueException("Object cannot be null");
         }
 
@@ -36,7 +36,7 @@ public class ReflectionUtils {
 
     public static List<String> getModifiers(Object object) {
         if (object == null) {
-            logger.error("Object cannot be null in getModifiers");
+            LOGGER.error("Object cannot be null in getModifiers");
             throw new IllegalArgumentException("Object cannot be null");
         }
 
@@ -52,7 +52,7 @@ public class ReflectionUtils {
 
     public static List<String> getAnnotations(Object object) {
         if (object == null) {
-            logger.error("Object cannot be null in getAnnotations");
+            LOGGER.error("Object cannot be null in getAnnotations");
             throw new IllegalArgumentException("Object cannot be null");
         }
 
@@ -71,7 +71,7 @@ public class ReflectionUtils {
 
     public static List<String> getConstructors(Object object) {
         if (object == null) {
-            logger.error("Object cannot be null in getConstructors");
+            LOGGER.error("Object cannot be null in getConstructors");
             throw new IllegalArgumentException("Object cannot be null");
         }
 

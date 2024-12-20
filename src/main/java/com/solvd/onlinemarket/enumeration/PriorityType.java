@@ -9,10 +9,10 @@ public enum PriorityType {
     MEDIUM("Medium priority deliver in 2 days"),
     LOW("Low priority deliver in 5 days");
 
-    private static final Logger logger = LogManager.getLogger(PriorityType.class);
+    private static final Logger LOGGER = LogManager.getLogger(PriorityType.class);
 
     static {
-        logger.info("Using PriorityType enum check if product was delivered");
+        LOGGER.info("Using PriorityType enum check if product was delivered");
     }
 
     private final String type;

@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
 
-    private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
+    private static final Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
     private final Queue<Connection> pool;
     private final int maxSize;
     private final Lock lock = new ReentrantLock();
@@ -29,11 +29,11 @@ public class ConnectionPool {
         lock.lock();
         try {
             while (pool.isEmpty()) {
-                logger.info("{} is waiting for a connection...", Thread.currentThread().getName());
+                LOGGER.info("{} is waiting for a connection...", Thread.currentThread().getName());
                 available.await();
             }
             Connection connection = pool.poll();
-            logger.info("{} acquired {}", Thread.currentThread().getName(), connection.getName());
+            LOGGER.info("{} acquired a connection", Thread.currentThread().getName());
             return connection;
         } finally {
             lock.unlock();
@@ -44,7 +44,7 @@ public class ConnectionPool {
         lock.lock();
         try {
             pool.add(connection);
-            logger.info("{} released {}", Thread.currentThread().getName(), connection.getName());
+            LOGGER.info("{} released a connection", Thread.currentThread().getName());
             available.signal();
         } finally {
             lock.unlock();
