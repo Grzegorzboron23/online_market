@@ -37,8 +37,8 @@ public class EmployeeService {
         return emailMessage.toString();
     }
 
-    //    All com.solvd.onlinemarket.exception extends runtime assuming that there is an interface where com.solvd.onlinemarket.employee can set this list
-    //    Set to avoid get multiple times the same com.solvd.onlinemarket.employee
+    //    All exception extends runtime assuming that there is an interface where employee can set this list
+    //    Set to avoid get multiple times the same employee
     public static BigDecimal decreasePaidForEmployeesAndCalculateSavings(Set<Employee> employees, Integer percentage) {
         if (employees == null || employees.isEmpty()) {
             throw new InvalidArgumentException("Provide some employees");

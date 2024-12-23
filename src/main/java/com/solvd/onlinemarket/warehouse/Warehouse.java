@@ -13,7 +13,7 @@ public class Warehouse {
 
     public void checkProductStatus() {
         if (product.isSpoiled()) {
-            System.out.println("The com.solvd.onlinemarket.product in the com.solvd.onlinemarket.warehouse is spoiled.");
+            System.out.println("The product in the com.solvd.onlinemarket.warehouse is spoiled.");
         } else {
             System.out.println("The com.solvd.onlinemarket.product in the com.solvd.onlinemarket.warehouse is in good condition.");
         }

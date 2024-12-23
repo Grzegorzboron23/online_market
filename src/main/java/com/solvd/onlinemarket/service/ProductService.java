@@ -22,6 +22,7 @@ public class ProductService {
                     BigDecimal.valueOf(product.getPricingInfo().getQuantity()))
             );
         }
+        LOGGER.info("Total value from product service {}", totalValue);
         return totalValue;
     }
 
